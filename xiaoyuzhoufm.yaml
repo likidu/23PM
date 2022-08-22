@@ -1,0 +1,391 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Swagger Petstore
+  license:
+    name: MIT
+servers:
+  # Or 47.243.128.47
+  - url: https://api.xiaoyuzhoufm.com/v1/
+paths:
+  # https://gist.github.com/likidu/99c6e73009cd2d29c27cb77279a9547b
+  /auth/sendCode:
+    post:
+      summary: Send SMS code for login
+      operationId: sendCode
+      tags:
+        - "auth"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/phoneNumber"
+      responses:
+        '200':
+          description: Send SMS code success
+  # https://gist.github.com/likidu/9058723618e49211679d1ed0fcddb0e6
+  /auth/loginOrSignUpWithSMS:
+    post:
+      summary: Login with SMS
+      operationId: loginWithSMS
+      tags:
+        - "auth"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/phoneNumber"
+                  type: object
+                  properties:
+                    verifyCode:
+                      type: string
+      responses:
+        '200':
+          description: Login success
+          content:
+            application/json:
+              schema:
+                title: userProfile
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      isSignUp:
+                        type: boolean
+                      showNewbieGuide:
+                        type: boolean
+                      newbieGuideFeatureGroup:
+                        type: string
+                        enum:
+                          - 'SKIP'
+                      subscriptionGuideFeatureGroup:
+                        type: string
+                        enum:
+                          - 'DISABLED'
+                      user:
+                        $ref: "#/components/schemas/user"
+        '400':
+          description: Login fail
+          content:
+            application/json:
+              schema:
+                title: loginFailMessage
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  code:
+                    type: integer
+                  toast:
+                    type: string
+  # https://gist.github.com/likidu/4a2dfb8073d525d2c5fc6b3cf3eaef76
+  /editor-pick/list:
+    post:
+      summary: Number of editor picks
+      operationId: editorPickList
+      tags:
+        - "editor"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+      responses:
+        "200":
+          description: Editor picks list
+          content:
+            application/json:
+              schema:
+                title: editorPickList
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      date:
+                        type: string
+                        format: date
+                      picks:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            episode:
+                              description: Episode item
+                              allOf:
+                                - $ref: "#/components/schemas/episode"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error"
+  /inbox/list:
+    post:
+      summary: Number of items from inbox
+      operationId: inboxList
+      tags:
+        - "inbox"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+      responses:
+        "200":
+          description: Inbox list
+          content:
+            application/json:
+              schema:
+                title: inboxList
+                type: object
+                properties:
+                  loadMoreKey:
+                    type: object
+                    properties:
+                      pubDate:
+                        type: string
+                        format: date-time
+                      id:
+                        type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/episode"
+components:
+  schemas:
+    color:
+      type: object
+      properties:
+        light:
+          type: string
+        dark:
+          type: string
+    image:
+      type: object
+      properties:
+        picUrl:
+          type: string
+        largePicUrl:
+          type: string
+        middlePicUrl:
+          type: string
+        smallPicUrl:
+          type: string
+        thubmnailUrl:
+          type: string
+    picture:
+      allOf:
+        - $ref: "#/components/schemas/image"
+          type: object
+          properties:
+            width:
+              type: integer
+            height:
+              type: integer
+            format:
+              type: string
+              enum:
+                - 'png'
+                - 'jpeg'
+    avatar:
+      type: object
+      properties:
+        picture:
+          description: Picture of avatar
+          allOf:
+            - $ref: "#/components/schemas/picture"
+    phoneNumber:
+      title: phoneNumber
+      type: object
+      properties:
+        mobilePhoneNumber:
+          type: string
+        areaCode:
+          type: string
+    mediaSource:
+      type: object
+      properties:
+        mode:
+          type: string
+          enum:
+            - "PUBLIC"
+        url:
+          type: string
+    media:
+      type: object
+      properties:
+        id:
+          type: string
+        size:
+          type: integer
+        mimeType:
+          type: string
+        source:
+          $ref: "#/components/schemas/mediaSource"
+        backupSource:
+          $ref: "#/components/schemas/mediaSource"
+    user:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - 'USER'
+        uid:
+          type: string
+        avatar:
+          description: User avatar
+          allOf:
+            - $ref: "#/components/schemas/avatar"
+        nickname:
+          type: string
+        isNicknameSet:
+          type: boolean
+        gender:
+          type: string
+          enum:
+            - 'MALE'
+            - 'FEAMALE'
+        isCancelled:
+          type: boolean
+        birthYear:
+          type: integer
+        industry:
+          type: string
+        phoneNumber:
+          description: User phone number
+          allOf:
+            - $ref: "#/components/schemas/phoneNumber"
+        debug:
+          type: boolean
+    podcast:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - "PODCAST"
+        pid:
+          type: string
+        title:
+          type: string
+        author:
+          type: string
+        description:
+          type: string
+        subscriptionCount:
+          type: integer
+        image:
+          description: Podcast image
+          allOf:
+            - $ref: "#/components/schemas/image"
+        color:
+          description: Podcast colors
+          allOf:
+            - $ref: "#/components/schemas/color"
+        syncMode:
+          type: string
+          enum:
+            - "RSS"
+        episodeCount:
+          type: integer
+        latestEpisodePubDate:
+          type: string
+          format: date-time
+        subscriptionStatus:
+          type: string
+          enum:
+            - "OFF"
+            - "ON"
+        subscriptionPush:
+          type: boolean
+        subscriptionStar:
+          type: boolean
+        status:
+          type: string
+          enum:
+            - "NORMAL"
+        payEpisodeCount:
+          type: integer
+        podcasters:
+          type: array
+          items:
+            $ref: "#/components/schemas/user"
+    episode:
+      type: object
+      required:
+        - "mediaKey"
+        - "duration"
+      properties:
+        type:
+          type: string
+          enum:
+            - "EPISODE"
+        eid:
+          type: string
+        pid:
+          type: string
+        title:
+          type: string
+        shownotes:
+          type: string
+        description:
+          type: string
+        image:
+          $ref: "#/components/schemas/image"
+        isPrivateMedia:
+          type: boolean
+        mediaKey:
+          type: string
+        media:
+          $ref: "#/components/schemas/media"
+        clapCount:
+          type: integer
+        commentCount:
+          type: integer
+        playCount:
+          type: integer
+        favoriteCount:
+          type: integer
+        pubDate:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum:
+            - "NORMAL"
+        duration:
+          type: integer
+        podcast:
+          description: From which podcast
+          allOf:
+            - $ref: "#/components/schemas/podcast"
+        isPlayed:
+          type: boolean
+        isFinished:
+          type: boolean
+        isPicked:
+          type: boolean
+        isFavorited:
+          type: boolean
+        # TODO: picked comment to be displayed in the list
+    error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
