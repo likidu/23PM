@@ -36,7 +36,9 @@ paths:
             schema:
               allOf:
                 - $ref: "#/components/schemas/phoneNumber"
-                  type: object
+                - type: object
+                  required:
+                    - "verifyCode"
                   properties:
                     verifyCode:
                       type: string
@@ -206,6 +208,9 @@ components:
     phoneNumber:
       title: phoneNumber
       type: object
+      required:
+        - "mobilePhoneNumber"
+        - "areaCode"
       properties:
         mobilePhoneNumber:
           type: string

@@ -9,32 +9,49 @@
   import Card from '../../ui/components/card/Card.svelte';
   import CardContent from '../../ui/components/card/CardContent.svelte';
   import CardHeader from '../../ui/components/card/CardHeader.svelte';
+  import InputRow from '../../ui/components/form/InputRow.svelte';
   import Typography from '../../ui/components/Typography.svelte';
   import View from '../../ui/components/view/View.svelte';
   import ViewContent from '../../ui/components/view/ViewContent.svelte';
 
   import logo from '../assets/svelte.png';
+  import { AuthClient } from '../services';
 
   export let params: { cardId: string };
+
+  let mobile: string = '';
+  let code: string = '';
 
   registerView({
     cards: [
       {
-        id: 'info',
+        id: 'splash',
         title: 'Welcome',
-        onSelect: () => replace('/welcome/info'),
+        onSelect: () => replace('/welcome/splash'),
+      },
+      {
+        id: 'sendsms',
+        title: 'SMS Code',
+        onSelect: () => replace('/welcome/sendsms'),
       },
       {
         id: 'login',
-        title: 'SMS Code',
-        onSelect: () => replace('/welcome/login'),
+        title: 'Login',
+        onSelect: () => {},
       },
     ],
-    activeCardId: params.cardId ?? 'info',
+    activeCardId: params.cardId ?? 'splash',
   });
 
-  function login() {
+  function sendSMS() {
     console.log('Hello');
+    if (AuthClient.sendCode({ mobilePhoneNumber: mobile, areaCode: '+1' })) {
+      replace('/welcome/login');
+    }
+  }
+
+  function login() {
+    
   }
 
   onMount(async () => {
@@ -48,23 +65,57 @@
       <Card cardId={$view.cards[0].id}>
         <CardHeader />
         <CardContent>
-          <Typography align="center" padding="both">XYZ FM on KaiOS</Typography>
+          <div class="logo">
+            <img src={logo} alt="Svelte Logo" class="inline-box h-48 w-48" />
+          </div>
+          
           <Button
             title="Login with SMS"
             navi={{
-              itemId: 'login',
-              onSelect: async () => login(),
+              itemId: 'start',
+              onSelect: async () => replace('/welcome/sendsms'),
             }}
           />
         </CardContent>
       </Card>
     {:else if params.cardId === $view.cards[1].id}
       <Card>
-        <CardHeader title="23PM" />
+        <CardHeader />
         <CardContent>
-          <div class="logo">
-            <img src={logo} alt="Svelte Logo" class="inline-box h-48 w-48" />
-          </div>
+          <Typography align="center" padding="both">Enter your mobile phone</Typography>
+          <InputRow
+            label="Mobile"
+            value={mobile}
+            placeholder="Mobile number..."
+            onChange={(val) => (mobile = val)}
+          />
+          <Button
+            title="Send Verification Code"
+            navi={{
+              itemId: 'sendSMS',
+              onSelect: async () => sendSMS(),
+            }}
+          />
+        </CardContent>
+      </Card>
+      {:else if params.cardId === $view.cards[2].id}
+      <Card>
+        <CardHeader />
+        <CardContent>
+          <Typography align="center" padding="both">Enter your verification code</Typography>
+          <InputRow
+            label="Verify code"
+            value={code}
+            placeholder="Verify code..."
+            onChange={(val) => (code = val)}
+          />
+          <Button
+            title="Send Verification Code"
+            navi={{
+              itemId: 'sendSMS',
+              onSelect: async () => login(),
+            }}
+          />
         </CardContent>
       </Card>
     {/if}

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { QueryClient, QueryClientProvider } from '@sveltestack/svelte-query';
   import Router, { replace } from 'svelte-spa-router';
 
   import Inbox from './app/routes/Inbox.svelte';
@@ -12,6 +13,8 @@
 
   import OnyxApp from './ui/components/frame/OnyxApp.svelte';
 
+  const queryClient = new QueryClient();
+
   const routes = {
     '/': Inbox,
     '/welcome/:cardId': Welcome,
@@ -22,10 +25,12 @@
   $: Onyx.settings.update($settings);
 
   onMount(() => {
-    replace('/welcome');
+    replace('/welcome/info');
   });
 </script>
 
 <OnyxApp>
-  <Router {routes} />
+  <QueryClientProvider client={queryClient}>
+    <Router {routes} />
+  </QueryClientProvider>
 </OnyxApp>
