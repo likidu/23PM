@@ -15,12 +15,14 @@
   import ViewContent from '../../ui/components/view/ViewContent.svelte';
 
   import logo from '../assets/svelte.png';
-  import { AuthClient } from '../services';
+  import { AuthClient, useLoginWithSMS } from '../services';
 
   export let params: { cardId: string };
 
   let mobile: string = '';
   let code: string = '';
+
+  const user = useLoginWithSMS();
 
   registerView({
     cards: [
@@ -50,9 +52,7 @@
     }
   }
 
-  function login() {
-    
-  }
+  function login() {}
 
   onMount(async () => {
     updateView({ dataStatus: DataStatus.Loaded });
@@ -68,7 +68,7 @@
           <div class="logo">
             <img src={logo} alt="Svelte Logo" class="inline-box h-48 w-48" />
           </div>
-          
+
           <Button
             title="Login with SMS"
             navi={{
@@ -82,7 +82,9 @@
       <Card>
         <CardHeader />
         <CardContent>
-          <Typography align="center" padding="both">Enter your mobile phone</Typography>
+          <Typography align="center" padding="both"
+            >Enter your mobile phone</Typography
+          >
           <InputRow
             label="Mobile"
             value={mobile}
@@ -98,11 +100,13 @@
           />
         </CardContent>
       </Card>
-      {:else if params.cardId === $view.cards[2].id}
+    {:else if params.cardId === $view.cards[2].id}
       <Card>
         <CardHeader />
         <CardContent>
-          <Typography align="center" padding="both">Enter your verification code</Typography>
+          <Typography align="center" padding="both"
+            >Enter your verification code</Typography
+          >
           <InputRow
             label="Verify code"
             value={code}
