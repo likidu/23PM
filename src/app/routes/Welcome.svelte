@@ -15,14 +15,16 @@
   import ViewContent from '../../ui/components/view/ViewContent.svelte';
 
   import logo from '../assets/svelte.png';
-  import { AuthClient, useLoginWithSMS } from '../services';
+  import { user, mobilePhoneNumber } from '../stores';
+  import { AuthClient } from '../services';
+  import type { LoginWithSMSError, User } from '../models';
 
   export let params: { cardId: string };
 
-  let mobile: string = '';
-  let code: string = '';
-
-  const user = useLoginWithSMS();
+  let mobile = '';
+  let code = '';
+  let toast = '';
+  let result: User | LoginWithSMSError;
 
   registerView({
     cards: [
@@ -45,14 +47,35 @@
     activeCardId: params.cardId ?? 'splash',
   });
 
-  function sendSMS() {
-    console.log('Hello');
-    if (AuthClient.sendCode({ mobilePhoneNumber: mobile, areaCode: '+1' })) {
+  async function sendSMS() {
+    mobilePhoneNumber.set(mobile);
+
+    const isCodeSent = await AuthClient.sendCode({
+      mobilePhoneNumber: $mobilePhoneNumber,
+      areaCode: '+86',
+    });
+
+    // sendCode returns 200 response
+    if (isCodeSent) {
       replace('/welcome/login');
     }
   }
 
-  function login() {}
+  async function login() {
+    result = await AuthClient.loginWithSMS({
+      mobilePhoneNumber: $mobilePhoneNumber,
+      areaCode: '+86',
+      verifyCode: code,
+    });
+
+    if (!(result.hasOwnProperty('success') && result['success'] === false)) {
+      // Save to store: user
+      $user = result as User;
+      replace('/');
+    } else {
+      toast = (result as LoginWithSMSError).toast;
+    }
+  }
 
   onMount(async () => {
     updateView({ dataStatus: DataStatus.Loaded });
@@ -68,7 +91,6 @@
           <div class="logo">
             <img src={logo} alt="Svelte Logo" class="inline-box h-48 w-48" />
           </div>
-
           <Button
             title="Login with SMS"
             navi={{
@@ -120,6 +142,9 @@
               onSelect: async () => login(),
             }}
           />
+          {#if result && $user === undefined}
+            <p class="text-red-500">{toast}</p>
+          {/if}
         </CardContent>
       </Card>
     {/if}

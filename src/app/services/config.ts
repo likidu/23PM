@@ -22,7 +22,6 @@ const deviceProperties = {
 export const API_CONFIG: AxiosRequestConfig = {
   baseURL: `${API_ENDPOINT}/${API_VERSION}`,
   headers: {
-    'User-Agent': 'Xiaoyuzhou/2.34.1 (build:1056; iOS 16.0.0)',
     'App-BuildNo': 1056,
     'App-Version': '2.34.1',
     'Access-Control-Allow-Origin': '*',

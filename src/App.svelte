@@ -11,6 +11,8 @@
   import { Onyx } from './ui/services';
   import { settings } from './ui/stores';
 
+  import { user } from './app/stores';
+
   import OnyxApp from './ui/components/frame/OnyxApp.svelte';
 
   const queryClient = new QueryClient();
@@ -25,7 +27,7 @@
   $: Onyx.settings.update($settings);
 
   onMount(() => {
-    replace('/welcome/info');
+    if ($user === undefined) replace('/welcome/splash');
   });
 </script>
 

@@ -1,7 +1,19 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import type { AxiosRequestConfig, AxiosPromise, AxiosError } from 'axios';
 import type { RefreshTokenResponse } from '../models';
 import { API_ENDPOINT, API_CONFIG } from './config';
+
+export const clientHandleError = <T>(error: AxiosError) => {
+  if (error.response) {
+    const { data, status } = <{ data: T; status: number }>error.response;
+    console.log(status);
+    console.log(data);
+
+    return data;
+  } else {
+    console.log(error.message);
+  }
+};
 
 /**
  * @summary Refresh expired token
@@ -31,7 +43,17 @@ client.interceptors.request.use(
 
 // Response interceptor for API calls
 client.interceptors.response.use(
-  (response) => response,
+  // Most reponses are wrapped in a "data" object except for those like refresh token and send code
+  (response: AxiosResponse) => {
+    const { data } = response;
+
+    const actualData = data.hasOwnProperty('data') ? data.data : data;
+    return {
+      ...response,
+      ...actualData,
+    };
+  },
+  // Do token refreshment
   async (error: AxiosError): Promise<AxiosError> => {
     const { config, response } = error;
 

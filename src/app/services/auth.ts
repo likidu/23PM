@@ -1,4 +1,6 @@
-import { useMutation } from '@sveltestack/svelte-query';
+import axios from 'axios';
+import type { AxiosError } from 'axios';
+import { useMutation, useQuery } from '@sveltestack/svelte-query';
 import type {
   UseMutationOptions,
   MutationFunction,
@@ -9,8 +11,9 @@ import type {
   LoginWithSMS,
   LoginWithSMSError,
   PhoneNumber,
+  User,
 } from '../models';
-import client from './client';
+import client, { clientHandleError } from './client';
 
 export class AuthClient {
   public static async sendCode(mobile: PhoneNumber): Promise<boolean> {
@@ -18,45 +21,20 @@ export class AuthClient {
     return status === 200 ? true : false;
   }
 
-  public static loginWithSMS() {
-    client.post('/auth/loginOrSignUpWithSMS');
+  /**
+   * @summary Login with SMS
+   */
+  public static async loginWithSMS(
+    verify: LoginWithSMS
+  ): Promise<User | LoginWithSMSError> {
+    try {
+      const { data } = await client.post<User>(
+        '/auth/loginOrSignUpWithSMS',
+        verify
+      );
+      return data;
+    } catch (error) {
+      return clientHandleError<LoginWithSMSError>(error);
+    }
   }
 }
-
-/**
- * @summary Login with SMS
- */
-
-const loginWithSMS = (verify: LoginWithSMS) => {
-  client.post('/auth/loginOrSignUpWithSMS', verify);
-};
-
-export const useLoginWithSMS = <
-  TError = LoginWithSMSError,
-  TContext = unknown
->(options?: {
-  mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof loginWithSMS>>,
-    TError,
-    { data: LoginWithSMS },
-    TContext
-  >;
-}) => {
-  const { mutation: mutationOptions } = options ?? {};
-
-  const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof loginWithSMS>>,
-    { data: LoginWithSMS }
-  > = (props) => {
-    const { data } = props ?? {};
-
-    return loginWithSMS(data);
-  };
-
-  return useMutation<
-    Awaited<ReturnType<typeof loginWithSMS>>,
-    TError,
-    { data: LoginWithSMS },
-    TContext
-  >(mutationFn, mutationOptions);
-};
