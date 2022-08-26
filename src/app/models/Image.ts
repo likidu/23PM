@@ -1,4 +1,4 @@
-interface Image {
+export interface Image {
   picUrl: string;
   largePicUrl: string;
   middlePicUrl: string;

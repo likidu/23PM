@@ -1,17 +1,9 @@
-import axios from 'axios';
-import type { AxiosError } from 'axios';
-import { useMutation, useQuery } from '@sveltestack/svelte-query';
 import type {
-  UseMutationOptions,
-  MutationFunction,
-} from '@sveltestack/svelte-query';
-import type { AxiosPromise } from 'axios';
-import type {
-  Awaited,
   LoginWithSMS,
   LoginWithSMSError,
   PhoneNumber,
   User,
+  RefreshToken,
 } from '../models';
 import client, { clientHandleError } from './client';
 
@@ -28,13 +20,21 @@ export class AuthClient {
     verify: LoginWithSMS
   ): Promise<User | LoginWithSMSError> {
     try {
-      const { data } = await client.post<User>(
-        '/auth/loginOrSignUpWithSMS',
-        verify
-      );
-      return data;
+      const { data, headers }: { data: any; headers: RefreshToken } =
+        await client.post('/auth/loginOrSignUpWithSMS', verify);
+
+      // Save to LocalStorage
+      localStorage.setItem('access-token', headers['x-jike-access-token']);
+      localStorage.setItem('refresh-token', headers['x-jike-refresh-token']);
+
+      return data.data.user as User;
     } catch (error) {
       return clientHandleError<LoginWithSMSError>(error);
     }
+  }
+
+  public static logout() {
+    localStorage.removeItem('access-token');
+    localStorage.removeItem('refresh-token');
   }
 }

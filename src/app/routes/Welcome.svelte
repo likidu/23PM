@@ -21,7 +21,8 @@
 
   export let params: { cardId: string };
 
-  let mobile = '';
+  let area = '+86';
+  let mobile = '13817930979';
   let code = '';
   let toast = '';
   let result: User | LoginWithSMSError;
@@ -52,7 +53,7 @@
 
     const isCodeSent = await AuthClient.sendCode({
       mobilePhoneNumber: $mobilePhoneNumber,
-      areaCode: '+86',
+      areaCode: area,
     });
 
     // sendCode returns 200 response
@@ -64,9 +65,11 @@
   async function login() {
     result = await AuthClient.loginWithSMS({
       mobilePhoneNumber: $mobilePhoneNumber,
-      areaCode: '+86',
+      areaCode: area,
       verifyCode: code,
     });
+
+    console.log(result);
 
     if (!(result.hasOwnProperty('success') && result['success'] === false)) {
       // Save to store: user

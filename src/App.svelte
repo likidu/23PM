@@ -7,6 +7,7 @@
   import Episode from './app/routes/Episode.svelte';
   import NotFound from './app/routes/NotFound.svelte';
   import Welcome from './app/routes/Welcome.svelte';
+  import AppMenu from './app/components/AppMenu.svelte';
 
   import { Onyx } from './ui/services';
   import { settings } from './ui/stores';
@@ -32,6 +33,7 @@
 </script>
 
 <OnyxApp>
+  <AppMenu slot="app-menu" />
   <QueryClientProvider client={queryClient}>
     <Router {routes} />
   </QueryClientProvider>

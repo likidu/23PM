@@ -45,13 +45,14 @@ client.interceptors.request.use(
 client.interceptors.response.use(
   // Most reponses are wrapped in a "data" object except for those like refresh token and send code
   (response: AxiosResponse) => {
-    const { data } = response;
+    // const { data } = response;
 
-    const actualData = data.hasOwnProperty('data') ? data.data : data;
-    return {
-      ...response,
-      ...actualData,
-    };
+    // const actualData = data.hasOwnProperty('data') ? data.data : data;
+    // return {
+    //   ...response,
+    //   ...actualData,
+    // };
+    return response;
   },
   // Do token refreshment
   async (error: AxiosError): Promise<AxiosError> => {
