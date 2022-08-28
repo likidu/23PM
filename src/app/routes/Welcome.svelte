@@ -69,8 +69,6 @@
       verifyCode: code,
     });
 
-    console.log(result);
-
     if (!(result.hasOwnProperty('success') && result['success'] === false)) {
       // Save to store: user
       $user = result as User;
@@ -107,15 +105,8 @@
       <Card>
         <CardHeader />
         <CardContent>
-          <Typography align="center" padding="both"
-            >Enter your mobile phone</Typography
-          >
-          <InputRow
-            label="Mobile"
-            value={mobile}
-            placeholder="Mobile number..."
-            onChange={(val) => (mobile = val)}
-          />
+          <Typography align="center" padding="both">Enter your mobile phone</Typography>
+          <InputRow label="Mobile" value={mobile} placeholder="Mobile number..." onChange={(val) => (mobile = val)} />
           <Button
             title="Send Verification Code"
             navi={{
@@ -129,15 +120,8 @@
       <Card>
         <CardHeader />
         <CardContent>
-          <Typography align="center" padding="both"
-            >Enter your verification code</Typography
-          >
-          <InputRow
-            label="Verify code"
-            value={code}
-            placeholder="Verify code..."
-            onChange={(val) => (code = val)}
-          />
+          <Typography align="center" padding="both">Enter your verification code</Typography>
+          <InputRow label="Verify code" value={code} placeholder="Verify code..." onChange={(val) => (code = val)} />
           <Button
             title="Send Verification Code"
             navi={{
