@@ -19,4 +19,6 @@ const episode = async (eid: string) => {
   return data.data;
 };
 
-export const useEpisode = (eid) => useQuery<Episode>('episode', () => episode(eid));
+// Tip on use for multiple components: Episode and Player
+export const useEpisode = (eid) =>
+  useQuery<Episode>(['episode', 'player'], () => episode(eid), { refetchOnWindowFocus: false });

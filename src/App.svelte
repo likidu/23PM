@@ -1,15 +1,17 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { QueryClient, QueryClientProvider } from '@sveltestack/svelte-query';
-  import Router, { replace } from 'svelte-spa-router';
+  import Router, { location, replace, pop } from 'svelte-spa-router';
 
   import Inbox from './app/routes/Inbox.svelte';
   import Episode from './app/routes/Episode.svelte';
+  import Player from './app/routes/Player.svelte';
   import NotFound from './app/routes/NotFound.svelte';
   import Welcome from './app/routes/Welcome.svelte';
   import AppMenu from './app/components/AppMenu.svelte';
 
-  import { Onyx } from './ui/services';
+  import { KeyManager, Onyx } from './ui/services';
+  import { Priority } from './ui/enums';
   import { settings } from './ui/stores';
 
   import { user } from './app/stores';
@@ -22,8 +24,25 @@
     '/': Inbox,
     '/welcome/:cardId': Welcome,
     '/episode/:eid': Episode,
+    '/player/:eid': Player,
     '*': NotFound,
   };
+
+  const keyMan = KeyManager.subscribe(
+    {
+      onBackspace: () => {
+        // If on the main screen, let KaiOS minimize the app
+        if ($location === '/') {
+          console.log('exit app');
+          return false;
+        }
+
+        pop();
+        return true;
+      },
+    },
+    Priority.Low,
+  );
 
   $: Onyx.settings.update($settings);
 

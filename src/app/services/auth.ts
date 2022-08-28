@@ -1,14 +1,8 @@
-import type {
-  LoginWithSMS,
-  LoginWithSMSError,
-  PhoneNumber,
-  User,
-  RefreshToken,
-} from '../models';
+import type { LoginWithSMS, LoginWithSMSError, PhoneNumber, User, RefreshToken } from '../models';
 import client, { clientHandleError } from './client';
 
 export class AuthClient {
-  public static async sendCode(mobile: PhoneNumber): Promise<boolean> {
+  static async sendCode(mobile: PhoneNumber): Promise<boolean> {
     const { status } = await client.post('/auth/sendCode', mobile);
     return status === 200 ? true : false;
   }
@@ -16,12 +10,12 @@ export class AuthClient {
   /**
    * @summary Login with SMS
    */
-  public static async loginWithSMS(
-    verify: LoginWithSMS
-  ): Promise<User | LoginWithSMSError> {
+  static async loginWithSMS(verify: LoginWithSMS): Promise<User | LoginWithSMSError> {
     try {
-      const { data, headers }: { data: any; headers: RefreshToken } =
-        await client.post('/auth/loginOrSignUpWithSMS', verify);
+      const { data, headers }: { data: any; headers: RefreshToken } = await client.post(
+        '/auth/loginOrSignUpWithSMS',
+        verify,
+      );
 
       // Save to LocalStorage
       localStorage.setItem('access-token', headers['x-jike-access-token']);
@@ -33,7 +27,7 @@ export class AuthClient {
     }
   }
 
-  public static logout() {
+  static logout() {
     localStorage.removeItem('access-token');
     localStorage.removeItem('refresh-token');
   }

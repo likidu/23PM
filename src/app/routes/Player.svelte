@@ -1,13 +1,9 @@
 <script lang="ts">
-  import { replace } from 'svelte-spa-router';
-
   import Card from '../../ui/components/card/Card.svelte';
   import CardContent from '../../ui/components/card/CardContent.svelte';
   import CardHeader from '../../ui/components/card/CardHeader.svelte';
   import View from '../../ui/components/view/View.svelte';
   import ViewContent from '../../ui/components/view/ViewContent.svelte';
-
-  import { KeyManager } from '../../ui/services';
 
   import MdHome from 'svelte-icons/md/MdHome.svelte';
 
@@ -18,16 +14,6 @@
 
   const episode = useEpisode(params.eid);
 
-  const keyMan = KeyManager.subscribe({
-    onEnter: () => {
-      replace(`/player/${params.eid}`);
-
-      return true;
-    },
-  });
-
-  console.log($user);
-
   $menu = [{ id: 'logout', text: 'Log out', route: '/', icon: MdHome }];
 </script>
 
@@ -35,15 +21,7 @@
   <ViewContent>
     <Card>
       <CardHeader title="Episode" />
-      <CardContent>
-        {#if $episode.status === 'loading'}
-          <span>Loading...</span>
-        {:else if $episode.status === 'error'}
-          <span class="text-red-500">Error!</span>
-        {:else}
-          <p>{$episode.data.title}</p>
-        {/if}
-      </CardContent>
+      <CardContent />
     </Card>
   </ViewContent>
 </View>
