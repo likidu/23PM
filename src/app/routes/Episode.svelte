@@ -1,15 +1,16 @@
 <script lang="ts">
-  import { replace } from 'svelte-spa-router';
+  import { onDestroy } from 'svelte';
 
-  import Card from '../../ui/components/card/Card.svelte';
-  import CardContent from '../../ui/components/card/CardContent.svelte';
-  import CardHeader from '../../ui/components/card/CardHeader.svelte';
   import View from '../../ui/components/view/View.svelte';
+  import ViewHeader from '../../ui/components/view/ViewHeader.svelte';
   import ViewContent from '../../ui/components/view/ViewContent.svelte';
+  import ViewFooter from '../../ui/components/view/ViewFooter.svelte';
 
   import { KeyManager } from '../../ui/services';
 
   import MdHome from 'svelte-icons/md/MdHome.svelte';
+
+  import Player from '../components/Player.svelte';
 
   import { menu, user } from '../stores';
   import { useEpisode } from '../services';
@@ -18,32 +19,40 @@
 
   const episode = useEpisode(params.eid);
 
-  const keyMan = KeyManager.subscribe({
-    onEnter: () => {
-      replace(`/player/${params.eid}`);
-
-      return true;
-    },
-  });
-
-  console.log($user);
+  const keyMan = KeyManager.subscribe({});
 
   $menu = [{ id: 'logout', text: 'Log out', route: '/', icon: MdHome }];
+
+  onDestroy(() => keyMan.unsubscribe());
 </script>
 
 <View>
-  <ViewContent>
-    <Card>
-      <CardHeader title="Episode" />
-      <CardContent>
-        {#if $episode.status === 'loading'}
-          <span>Loading...</span>
-        {:else if $episode.status === 'error'}
-          <span class="text-red-500">Error!</span>
-        {:else}
-          <p>{$episode.data.title}</p>
-        {/if}
-      </CardContent>
-    </Card>
-  </ViewContent>
+  {#if $episode.status === 'loading'}
+    <ViewHeader>
+      <h4>Episode</h4>
+    </ViewHeader>
+    <ViewContent>
+      <p>Loading...</p>
+    </ViewContent>
+  {:else if $episode.status === 'error'}
+    <span class="text-red-500">Error!</span>
+  {:else}
+    {@const episode = $episode.data}
+    <ViewHeader>
+      <h4>{episode.podcast.title}</h4>
+    </ViewHeader>
+    <ViewContent>
+      <Player
+        audio={{
+          name: episode.title,
+          url: episode.mediaKey,
+          duration: episode.duration,
+          cover: episode.image.smallPicUrl,
+        }}
+      />
+    </ViewContent>
+    <ViewFooter>
+      <p>Hello</p>
+    </ViewFooter>
+  {/if}
 </View>

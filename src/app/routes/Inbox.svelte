@@ -11,7 +11,7 @@
   import MdHome from 'svelte-icons/md/MdHome.svelte';
 
   import { menu } from '../stores';
-  import { useInboxList, truncate } from '../services';
+  import { useInboxList } from '../services';
 
   const inbox = useInboxList();
 

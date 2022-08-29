@@ -5,7 +5,6 @@
 
   import Inbox from './app/routes/Inbox.svelte';
   import Episode from './app/routes/Episode.svelte';
-  import Player from './app/routes/Player.svelte';
   import NotFound from './app/routes/NotFound.svelte';
   import Welcome from './app/routes/Welcome.svelte';
   import AppMenu from './app/components/AppMenu.svelte';
@@ -24,7 +23,6 @@
     '/': Inbox,
     '/welcome/:cardId': Welcome,
     '/episode/:eid': Episode,
-    '/player/:eid': Player,
     '*': NotFound,
   };
 
