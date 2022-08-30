@@ -1,6 +1,25 @@
 import type { Image } from './Image';
-import type { Media } from './Media';
 import type { Podcast } from './Podcast';
+
+export type MediaSourceMode = typeof MediaSourceMode[keyof typeof MediaSourceMode];
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+const MediaSourceMode = {
+  PUBLIC: 'PUBLIC',
+} as const;
+
+interface MediaSource {
+  mode: MediaSourceMode;
+  url: string;
+}
+
+export interface MediaContent {
+  id: string;
+  size: number;
+  mimeType: string;
+  source: MediaSource;
+  backupSource: MediaSource;
+}
 
 export type EpisodeType = typeof EpisodeType[keyof typeof EpisodeType];
 
@@ -24,7 +43,7 @@ export interface Episode {
   image: Image;
   isPrivateMedia: boolean;
   mediaKey: string;
-  media: Media;
+  media: MediaContent;
   clapCount: number;
   commentCount: number;
   playCount: number;

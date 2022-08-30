@@ -1,48 +1,57 @@
 <script lang="ts">
-  import { onDestroy, createEventDispatcher } from 'svelte';
+  import { onMount, createEventDispatcher } from 'svelte';
 
-  import IconButton from '../../ui/components/buttons/IconButton.svelte';
+  import { isPlaying } from '../stores';
 
-  import { KeyManager } from '../../ui/services';
+  let audio: HTMLAudioElement;
 
-  import Play from '../assets/icons/Play.svelte';
+  const dispatch = createEventDispatcher();
 
-  import { Player } from '../services';
-  import type { Audio } from '../models';
+  //Event dispatch
+  const canplay = (e: Event) => dispatch('canplay', e);
+  const canplaythrough = (e: Event) => dispatch('canplaythrough', e);
+  const durationchange = (e: Event) => dispatch('durationchange', e);
+  const loadeddata = (e: Event) => dispatch('loadeddata', e);
+  const playing = (e: Event) => dispatch('playing', e);
+  const stalled = (e: Event) => dispatch('stalled', e);
+  const suspend = (e: Event) => dispatch('suspend', e);
+  const waiting = (e: Event) => dispatch('waiting', e);
+  const volumechange = (e: Event) => dispatch('volumechange', e);
 
-  export let audio: Audio;
+  $: progress = 0;
 
-  let element: HTMLDivElement;
-
-  const svelteDispatch = createEventDispatcher();
-  const player = new Player(dispatch);
-
-  const keyMan = KeyManager.subscribe({
-    onEnter: () => {
-      player.paused ? player.play() : player.pause();
-
-      return true;
-    },
-  });
-
-  $: player.src = audio.url;
-
-  /**
-   * @summary: Dispatch customer events for Player class
-   * @param name: Event name
-   * @param detail: Event details
-   * @ret none
-   */
-  function dispatch(name, detail?: any) {
-    svelteDispatch(name, detail);
-    element.dispatchEvent && element.dispatchEvent(new CustomEvent(name, { detail }));
+  $: {
+    $isPlaying ? audio.play() : audio.pause();
   }
 
-  onDestroy(() => keyMan.unsubscribe());
+  // runs every time audio currentTime changes
+  function timeUpdate(e: Event) {
+    progress = audio.currentTime ?? 0;
+    dispatch('timeupdate', e);
+  }
+
+  onMount(() => {
+    if (audio) {
+      audio.mozAudioChannelType = 'content';
+    }
+  });
 </script>
 
-<div id="player" bind:this={element} class="bg-slate-300">
-  <img src={audio.cover} alt="Episode Cover" width="156" />
-  <p>{audio.name}</p>
-  <IconButton icon={Play} navi={{ itemId: 'playButton' }} />
-</div>
+<audio
+  bind:this={audio}
+  class="hidden"
+  preload="auto"
+  src={urls[$trackIndex]}
+  on:loadedmetadata={loadedMetadata}
+  on:timeupdate={timeUpdate}
+  on:ended={ended}
+  on:canplay={canplay}
+  on:canplaythrough={canplaythrough}
+  on:durationchange={durationchange}
+  on:loadeddata={loadeddata}
+  on:playing={playing}
+  on:stalled={stalled}
+  on:suspend={suspend}
+  on:waiting={waiting}
+  on:volumechange={volumechange}
+/>

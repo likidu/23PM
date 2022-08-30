@@ -1,12 +1,14 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount, setContext, createEventDispatcher } from 'svelte';
   import { QueryClient, QueryClientProvider } from '@sveltestack/svelte-query';
   import Router, { location, replace, pop } from 'svelte-spa-router';
 
+  import OnyxApp from './ui/components/frame/OnyxApp.svelte';
   import Inbox from './app/routes/Inbox.svelte';
   import Episode from './app/routes/Episode.svelte';
   import NotFound from './app/routes/NotFound.svelte';
   import Welcome from './app/routes/Welcome.svelte';
+  import Player from './app/components/Player.svelte';
   import AppMenu from './app/components/AppMenu.svelte';
 
   import { KeyManager, Onyx } from './ui/services';
@@ -14,8 +16,6 @@
   import { settings } from './ui/stores';
 
   import { user } from './app/stores';
-
-  import OnyxApp from './ui/components/frame/OnyxApp.svelte';
 
   const queryClient = new QueryClient();
 
@@ -50,6 +50,9 @@
 </script>
 
 <OnyxApp>
+  {#if $user}
+    <Player />
+  {/if}
   <AppMenu slot="app-menu" />
   <QueryClientProvider client={queryClient}>
     <Router {routes} />

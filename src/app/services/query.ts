@@ -3,7 +3,7 @@
  **/
 
 import { useQuery } from '@sveltestack/svelte-query';
-import type { Episode, InboxList } from '../models';
+import type { Episode, InboxList, Audio } from '../models';
 import client from './client';
 
 const inboxList = async (limit = 10) => {
@@ -20,5 +20,5 @@ const episode = async (eid: string) => {
 };
 
 // Tip on use for multiple components: Episode and Player
-export const useEpisode = (eid) =>
-  useQuery<Episode>(['episode', 'player'], () => episode(eid), { refetchOnWindowFocus: false });
+export const useEpisode = (eid: string) =>
+  useQuery<Episode>('episode', () => episode(eid), { refetchOnWindowFocus: false });
