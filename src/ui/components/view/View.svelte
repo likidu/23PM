@@ -21,10 +21,7 @@
       <ViewCards />
     </div>
   {/if}
-  <div
-    class="content"
-    style={`transform: translateY(${$view.viewing === ViewState.Stack ? cardsHeight : 0}px)`}
-  >
+  <div class="content" style={`transform: translateY(${$view.viewing === ViewState.Stack ? cardsHeight : 0}px)`}>
     <slot />
   </div>
 </div>

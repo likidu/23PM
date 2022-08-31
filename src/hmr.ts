@@ -1,7 +1,7 @@
 // Customized HMR-safe stores
 // Based off https://github.com/svitejs/svite/blob/ddec6b9/packages/playground/hmr/src/stores/hmr-stores.js
 import type { Writable } from 'svelte/store';
-import { user, menu, mobilePhoneNumber, player } from './app/stores';
+import { user, menu, mobilePhoneNumber, isPlaying, eid, mediaKey, duration, current } from './app/stores';
 
 let stores: Record<string, Writable<any>> = {};
 
@@ -12,7 +12,11 @@ export function registerStore<T>(id: string, store: Writable<T>) {
 registerStore('user', user);
 registerStore('menu', menu);
 registerStore('mobilePhoneNumber', mobilePhoneNumber);
-registerStore('player', player);
+registerStore('isPlaying', isPlaying);
+registerStore('eid', eid);
+registerStore('mediaKey', mediaKey);
+registerStore('duration', duration);
+registerStore('current', current);
 
 // preserve the store across HMR updates
 if (import.meta.hot) {

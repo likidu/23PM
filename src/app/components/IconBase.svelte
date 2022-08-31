@@ -12,6 +12,7 @@
 
 <style>
   svg {
+    color: white;
     stroke: currentColor;
     fill: currentColor;
     stroke-width: 0;

@@ -16,12 +16,12 @@
 
   import Progress from '../components/Progress.svelte';
 
-  import { menu, isPlaying, audio } from '../stores';
-  import { useEpisode, Player } from '../services';
+  import { menu, isPlaying, eid, mediaKey, duration, current } from '../stores';
+  import { useEpisode, displayDuration } from '../services';
 
   export let params: { eid: string };
 
-  const player = getContext<Player>('player');
+  let progress = 0;
 
   const episode = useEpisode(params.eid);
 
@@ -34,12 +34,10 @@
     },
     onArrowLeft: () => {
       // Rewind 15s
-      player.wind(-15);
       return true;
     },
     onArrowRight: () => {
       // Wind 30s
-      player.wind(30);
       return true;
     },
     onArrowUp: () => {
@@ -52,17 +50,17 @@
     },
   });
 
-  // Determine if episode has been fetched
-  $: if (!!$episode.data?.mediaKey) {
-    const { data } = $episode;
-    $audio = {
-      name: data.title,
-      url: data.mediaKey,
-      duration: data.duration,
-      paused: true,
-      progress: 0,
-    };
+  // If query is loaded and eid is not the current one is playing
+  $: if (!!$episode.data?.mediaKey && $eid !== $episode.data.eid) {
+    eid.set($episode.data.eid);
+    mediaKey.set($episode.data.mediaKey);
+    duration.set($episode.data.duration);
+
+    console.log(`[Episode] : mediaKey ${$mediaKey}`);
   }
+
+  // Set progress bar percent and reserve 4 fraction values
+  $: progress = Math.round(($current / $duration) * 10000) / 10000;
 
   $menu = [{ id: 'logout', text: 'Log out', route: '/', icon: MdHome }];
 
@@ -87,13 +85,18 @@
     <ViewContent>
       <img src={episode.image.smallPicUrl} alt="Episode Cover" width="156" />
       <h4>{episode.title}</h4>
-      <Progress progress={$audio.progress} />
+      <div id="track-time">
+        <small>{displayDuration($current)}</small>
+        <small>-{displayDuration($duration - $current)}</small>
+      </div>
+      <Progress {progress} />
+      <p>{progress}</p>
     </ViewContent>
     <ViewFooter>
       {#if $isPlaying}
-        <IconButton icon={Play} navi={{ itemId: 'playButton' }} />
-      {:else}
         <IconButton icon={Pause} navi={{ itemId: 'pauseButton' }} />
+      {:else}
+        <IconButton icon={Play} navi={{ itemId: 'playButton' }} />
       {/if}
     </ViewFooter>
   {/if}

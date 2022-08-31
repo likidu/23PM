@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount, createEventDispatcher } from 'svelte';
 
-  import { isPlaying } from '../stores';
+  import { isPlaying, eid, mediaKey, duration, current } from '../stores';
 
   let audio: HTMLAudioElement;
 
@@ -18,15 +18,16 @@
   const waiting = (e: Event) => dispatch('waiting', e);
   const volumechange = (e: Event) => dispatch('volumechange', e);
 
-  $: progress = 0;
-
   $: {
-    $isPlaying ? audio.play() : audio.pause();
+    if (audio && $mediaKey) {
+      console.log(`[Player] : mediaKey ${$mediaKey}`);
+      $isPlaying ? audio.play() : audio.pause();
+    }
   }
 
   // runs every time audio currentTime changes
   function timeUpdate(e: Event) {
-    progress = audio.currentTime ?? 0;
+    $current = audio.currentTime ?? 0;
     dispatch('timeupdate', e);
   }
 
@@ -41,10 +42,9 @@
   bind:this={audio}
   class="hidden"
   preload="auto"
-  src={urls[$trackIndex]}
-  on:loadedmetadata={loadedMetadata}
+  src={$mediaKey}
+  duration={$duration}
   on:timeupdate={timeUpdate}
-  on:ended={ended}
   on:canplay={canplay}
   on:canplaythrough={canplaythrough}
   on:durationchange={durationchange}

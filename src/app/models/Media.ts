@@ -1,8 +1,7 @@
 export interface Media {
   eid: string;
-  name: string;
-  url: string;
+  mediaKey: string;
   duration: number;
-  paused: boolean;
   progress: number;
+  paused: boolean;
 }

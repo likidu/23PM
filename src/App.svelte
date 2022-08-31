@@ -15,7 +15,7 @@
   import { Priority } from './ui/enums';
   import { settings } from './ui/stores';
 
-  import { user } from './app/stores';
+  import { user, mediaKey } from './app/stores';
 
   const queryClient = new QueryClient();
 
@@ -50,7 +50,7 @@
 </script>
 
 <OnyxApp>
-  {#if $user}
+  {#if $user && $mediaKey}
     <Player />
   {/if}
   <AppMenu slot="app-menu" />
