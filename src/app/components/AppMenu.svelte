@@ -6,7 +6,7 @@
   import { updateView } from '../../ui/stores/view';
   import { getShortcutFromIndex } from '../../ui/utils/getShortcutFromIndex';
 
-  import { menu } from '../stores';
+  import { menu } from '../stores/user';
 
   import { push } from 'svelte-spa-router';
 </script>

@@ -15,7 +15,7 @@
   import ViewContent from '../../ui/components/view/ViewContent.svelte';
 
   import logo from '../assets/svelte.png';
-  import { user, mobilePhoneNumber } from '../stores';
+  import { user, mobilePhoneNumber } from '../stores/user';
   import { AuthClient } from '../services';
   import type { LoginWithSMSError, User } from '../models';
 
@@ -103,7 +103,7 @@
       </Card>
     {:else if params.cardId === $view.cards[1].id}
       <Card>
-        <CardHeader />
+        <CardHeader title="Login" />
         <CardContent>
           <Typography align="center" padding="both">Enter your mobile phone</Typography>
           <InputRow label="Mobile" value={mobile} placeholder="Mobile number..." onChange={(val) => (mobile = val)} />
@@ -118,7 +118,7 @@
       </Card>
     {:else if params.cardId === $view.cards[2].id}
       <Card>
-        <CardHeader />
+        <CardHeader title="Login" />
         <CardContent>
           <Typography align="center" padding="both">Enter your verification code</Typography>
           <InputRow label="Verify code" value={code} placeholder="Verify code..." onChange={(val) => (code = val)} />

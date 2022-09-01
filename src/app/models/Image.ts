@@ -3,7 +3,7 @@ export interface Image {
   largePicUrl: string;
   middlePicUrl: string;
   smallPicUrl: string;
-  thubmnailUrl: string;
+  thumbnailUrl: string;
 }
 
 type Picture = Image;

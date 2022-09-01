@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Color } from '../../enums';
 
+  // TODO: Use TailwindCSS from Progress
   export let height = 7;
   export let color: Color = Color.Accent;
   export let value: number;

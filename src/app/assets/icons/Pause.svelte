@@ -1,5 +1,5 @@
 <script lang="ts">
-  import IconBase from '../../components/IconBase.svelte';
+  import IconBase from './IconBase.svelte';
 </script>
 
 <IconBase {...$$props}>

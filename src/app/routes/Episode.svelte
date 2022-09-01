@@ -3,22 +3,25 @@
   import { onDestroy } from 'svelte';
 
   import View from '../../ui/components/view/View.svelte';
-  import ViewHeader from '../../ui/components/view/ViewHeader.svelte';
   import ViewContent from '../../ui/components/view/ViewContent.svelte';
-  import ViewFooter from '../../ui/components/view/ViewFooter.svelte';
-  import IconButton from '../../ui/components/buttons/IconButton.svelte';
+  import Card from '../../ui/components/card/Card.svelte';
+  import CardContent from '../../ui/components/card/CardContent.svelte';
+  import CardHeader from '../../ui/components/card/CardHeader.svelte';
+  import CardFooter from '../../ui/components/card/CardFooter.svelte';
+  import Icon from '../../ui/components/icon/Icon.svelte';
+  import Progressbar from '../../ui/components/form/Progressbar.svelte';
+  import Typography from '../../ui/components/Typography.svelte';
 
   import { KeyManager } from '../../ui/services';
-  import { Priority } from '../..//ui/enums';
+  import { appMenu } from '../../ui/stores';
+  import { Priority, RenderState } from '../../ui/enums';
 
-  import Play from '../assets/icons/Play.svelte';
-  import Pause from '../assets/icons/Pause.svelte';
+  import { Play, Pause } from '../assets/icons';
   import MdHome from 'svelte-icons/md/MdHome.svelte';
 
   import { load, pause, play, skip, skipTo } from '../components/Player.svelte';
-  import Progress from '../components/Progress.svelte';
 
-  import { menu } from '../stores';
+  import { menu } from '../stores/user';
   import { player } from '../stores/player';
   import { useEpisode } from '../services';
   import { formatSeconds } from '../helper';
@@ -77,39 +80,41 @@
 
   $menu = [{ id: 'logout', text: 'Log out', route: '/', icon: MdHome }];
 
+  $: {
+    if ($player.eid && $appMenu.state === RenderState.Destroyed) keyMan.enable();
+    else keyMan.disable();
+  }
+
   onDestroy(() => keyMan.unsubscribe());
 </script>
 
 <View>
-  {#if $episode.status === 'loading'}
-    <ViewHeader>
-      <h4>Episode</h4>
-    </ViewHeader>
-    <ViewContent>
-      <p>Loading...</p>
-    </ViewContent>
-  {:else if $episode.status === 'error'}
-    <span class="text-red-500">Error!</span>
-  {:else}
-    {@const episode = $episode.data}
-    <ViewHeader>
-      <h4>{episode.podcast.title}</h4>
-    </ViewHeader>
-    <ViewContent>
-      <img src={episode.image.smallPicUrl} alt="Episode Cover" width="156" />
-      <h4>{episode.title}</h4>
-      <div id="time-tracker">
-        <small>{formatSeconds($current)}</small>
-        <small>-{formatSeconds($duration - $current)}</small>
-      </div>
-      <Progress {progress} />
-    </ViewContent>
-    <ViewFooter>
-      {#if $player.playing}
-        <IconButton icon={Pause} navi={{ itemId: 'pauseButton' }} />
+  <ViewContent>
+    <Card>
+      {#if $episode.status === 'loading'}
+        <Typography align="center">Loading...</Typography>
+      {:else if $episode.status === 'error'}
+        <Typography align="center">Error!</Typography>
       {:else}
-        <IconButton icon={Play} navi={{ itemId: 'playButton' }} />
+        {@const episode = $episode.data}
+        <CardHeader title={episode.podcast.title} />
+        <CardContent>
+          <img src={episode.image.smallPicUrl} alt="Episode Cover" width="156" />
+          <h4>{episode.title}</h4>
+          <div id="time-tracker" class="flex justify-between">
+            <small>{formatSeconds($player.current)}</small>
+            <small>{formatSeconds($player.duration - $player.current)}</small>
+          </div>
+          <Progressbar value={progress} />
+        </CardContent>
+        <CardFooter>
+          {#if $player.playing}
+            <Icon><Pause /></Icon>
+          {:else}
+            <Icon><Play /></Icon>
+          {/if}
+        </CardFooter>
       {/if}
-    </ViewFooter>
-  {/if}
+    </Card>
+  </ViewContent>
 </View>

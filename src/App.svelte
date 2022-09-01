@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, setContext, createEventDispatcher } from 'svelte';
+  import { onMount } from 'svelte';
   import { QueryClient, QueryClientProvider } from '@sveltestack/svelte-query';
   import Router, { location, replace, pop } from 'svelte-spa-router';
 
@@ -13,9 +13,9 @@
 
   import { KeyManager, Onyx } from './ui/services';
   import { Priority } from './ui/enums';
-  import { settings } from './ui/stores';
-
-  import { user, mediaKey } from './app/stores';
+  import { settings } from './app/stores/settings';
+  import { user } from './app/stores/user';
+  import { player } from './app/stores/player';
 
   const queryClient = new QueryClient();
 
@@ -50,7 +50,7 @@
 </script>
 
 <OnyxApp>
-  {#if $user && $mediaKey}
+  {#if $user && $player.eid}
     <Player />
   {/if}
   <AppMenu slot="app-menu" />
