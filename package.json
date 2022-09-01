@@ -21,6 +21,7 @@
     "cross-env": "^7.0.3",
     "cssnano": "^5.1.13",
     "jest": "^28.1.3",
+    "kaios-lib": "^1.6.0",
     "postcss": "^8.4.16",
     "postcss-load-config": "^4.0.1",
     "svelte": "^3.49.0",

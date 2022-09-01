@@ -1,9 +1,52 @@
-<script lang="ts">
+<script context="module" lang="ts">
   import { onMount, createEventDispatcher } from 'svelte';
 
-  import { isPlaying, eid, mediaKey, duration, current } from '../stores';
+  import { player } from '../stores/player';
+  import { clamp } from '../helper';
 
-  let audio: HTMLAudioElement;
+  let audio = document.createElement('audio');
+  // Make KaiOS able to control the volume of it
+  audio.mozAudioChannelType = 'content';
+
+  audio.onloadedmetadata = () => {};
+
+  export function load(eid: string, mediaKey: string, duration: number) {
+    audio.src = mediaKey;
+    audio.currentTime = 0;
+
+    player.update({ eid, duration });
+
+    audio.play();
+    player.update({ playing: true });
+  }
+
+  export function play() {
+    audio.play();
+    player.update({ playing: true });
+  }
+
+  export function pause() {
+    audio.pause();
+    player.update({ playing: false });
+  }
+
+  export function stop() {
+    audio.src = '';
+    audio.currentTime = 0;
+    player.reset();
+  }
+
+  export function skip(seconds: number) {
+    const newTime = clamp(audio.currentTime + seconds, 0, audio.duration);
+    audio.currentTime = audio.currentTime + seconds;
+    player.update({ current: newTime });
+  }
+
+  export function skipTo(seconds: number) {
+    const newTime = clamp(seconds, 0, audio.duration);
+    audio.currentTime = seconds;
+    player.update({ current: newTime });
+  }
 
   const dispatch = createEventDispatcher();
 
@@ -31,11 +74,7 @@
     dispatch('timeupdate', e);
   }
 
-  onMount(() => {
-    if (audio) {
-      audio.mozAudioChannelType = 'content';
-    }
-  });
+  onMount(() => {});
 </script>
 
 <audio
