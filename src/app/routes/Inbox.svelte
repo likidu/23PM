@@ -10,6 +10,7 @@
   import ListItem from '../../ui/components/list/ListItem.svelte';
 
   import { Color, IconSize } from '../../ui/enums';
+  import { registerView } from '../../ui/stores';
 
   import MdHome from 'svelte-icons/md/MdHome.svelte';
 
@@ -19,7 +20,12 @@
 
   const inbox = useInboxList();
 
-  $menu = [{ id: 'logout', text: 'Log out', route: '/', icon: MdHome }];
+  registerView({});
+
+  $menu = [
+    { id: 'player', text: 'Player', route: '/player', icon: MdHome },
+    { id: 'logout', text: 'Log out', route: '/', icon: MdHome },
+  ];
 </script>
 
 <View>
@@ -64,6 +70,6 @@
     @apply flex space-x-6 mt-1;
   }
   .stats > .item {
-    @apply flex space-x-4 items-center text-xl;
+    @apply flex items-center text-xl;
   }
 </style>

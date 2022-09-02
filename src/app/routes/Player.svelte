@@ -18,6 +18,7 @@
 
   import MdHome from 'svelte-icons/md/MdHome.svelte';
 
+  import { pause, play, skip, skipTo } from '../components/Audio.svelte';
   import { Play, Pause } from '../assets/icons';
 
   import { menu } from '../stores/user';
@@ -25,76 +26,90 @@
   import { useEpisode } from '../services';
   import { formatSeconds } from '../helper';
 
-  let triggered = true;
+  let progress = 0;
+  let eid: string;
+
+  const episode = useEpisode($player.eid);
+  $: eid = $episode.data?.eid;
 
   const keyMan = KeyManager.subscribe(
     {
       onEnter: () => {
-        // triggered = true;
-        console.log(`[Episode] :onEnter`);
-
-        // $player.playing ? pause() : play();
-
+        $player.playing ? pause() : play();
         return true;
       },
       onArrowLeft: () => {
         // Rewind 15s
+        skip(-15);
         return true;
       },
       onArrowLeftLong: () => {
+        skipTo(0);
         return true;
       },
       onArrowRight: () => {
         // Wind 30s
+        skip(30);
         return true;
       },
       onArrowRightLong: () => {
+        skipTo($player.duration - 5);
         return true;
       },
       onArrowUp: () => {
+        new KaiOS.Volume().up().catch(() => {});
         return true;
       },
       onArrowDown: () => {
+        new KaiOS.Volume().down().catch(() => {});
         return true;
       },
     },
     Priority.High,
   );
 
-  // If query is loaded and eid is not the current one is playing.
-  $: {
-    console.log(`[Episode] : triggered ${triggered}`);
-    triggered = false;
-
-    // if (eid && eid !== $player.eid && triggered) {
-    //   console.log('[Episode] : here.');
-
-    //   stop();
-
-    //   const { mediaKey, duration } = $episode.data;
-    //   load(eid, mediaKey, duration);
-
-    //   triggered = false;
-    // }
-  }
+  // Set progress bar percent and reserve 43 fraction values (100,000 / 100).
+  $: progress = Math.round(($player.current / $player.duration) * 100000) / 1000;
 
   $menu = [{ id: 'logout', text: 'Log out', route: '/', icon: MdHome }];
 
   $: {
-    if ($appMenu.state === RenderState.Destroyed) keyMan.enable();
+    if ($player.eid && $appMenu.state === RenderState.Destroyed) keyMan.enable();
     else keyMan.disable();
   }
 
-  onDestroy(() => keyMan.unsubscribe());
+  onDestroy(() => {
+    keyMan.unsubscribe();
+  });
 </script>
 
 <View>
   <ViewContent>
     <Card>
-      <CardHeader title="Yes?" />
-      <CardContent>
+      {#if $episode.status === 'loading'}
+        <Typography align="center">Loading...</Typography>
+      {:else if $episode.status === 'error'}
         <Typography align="center">Error!</Typography>
-      </CardContent>
+      {:else}
+        {@const episode = $episode.data}
+        <CardHeader title={episode.podcast.title} />
+        <CardContent>
+          <img src={episode.image.smallPicUrl} alt="Episode Cover" width="156" />
+          <h4>{episode.title}</h4>
+          <div id="time-tracker" class="flex justify-between">
+            <small>{formatSeconds($player.current)}</small>
+            <small>{formatSeconds($player.duration - $player.current)}</small>
+          </div>
+          <Progressbar value={progress} />
+        </CardContent>
+        <CardFooter>
+          {#if $player.playing}
+            <Icon><Pause /></Icon>
+          {:else}
+            <Icon><Play /></Icon>
+          {/if}
+        </CardFooter>
+      {/if}
     </Card>
   </ViewContent>
 </View>

@@ -20,16 +20,5 @@ const episode = async (eid: string): Promise<Episode> => {
 };
 
 // Tip on use for multiple components: Episode and Player
-export const useEpisode = (eid: string) => useQuery('episode', () => episode(eid), { refetchOnWindowFocus: false });
-
-// const media = (eid: string, mediaKey: string, duration: number): Promise<Media> =>
-//   Promise.resolve({
-//     eid,
-//     mediaKey,
-//     duration,
-//     progress: 0,
-//     paused: true,
-//   });
-
-// export const useMedia = (eid: string, mediaKey: string, duration: number) =>
-//   useQuery('media', () => media(eid, mediaKey, duration), { enabled: !!mediaKey });
+export const useEpisode = (eid: string) =>
+  useQuery(['episode', eid], () => episode(eid), { enabled: !!eid, refetchOnWindowFocus: false });

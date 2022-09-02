@@ -3,6 +3,11 @@ import type { AxiosRequestConfig, AxiosPromise, AxiosError } from 'axios';
 import type { RefreshTokenResponse } from '../models';
 import { API_ENDPOINT, API_CONFIG } from './config';
 
+/**
+ * @summary Handler of client error from acutal API calls
+ * @param error
+ * @returns T
+ */
 export const clientHandleError = <T>(error: AxiosError) => {
   if (error.response) {
     const { data, status } = <{ data: T; status: number }>error.response;
@@ -18,15 +23,58 @@ export const clientHandleError = <T>(error: AxiosError) => {
 /**
  * @summary Refresh expired token
  * @param refreshToken
- * @returns {AxiosPromise<RefreshToken>} x-jike-access-token, x-jike-refresh-token, success
+ * @returns {AxiosPromise<RefreshTokenResponse>} x-jike-access-token, x-jike-refresh-token, success
  */
-const appAuthTokensRefresh = (
-  refreshToken: string
-): AxiosPromise<RefreshTokenResponse> => {
-  const params = new URLSearchParams({
-    'x-jike-refresh-token': refreshToken,
+const appAuthTokensRefresh = (refreshToken: string): AxiosPromise<RefreshTokenResponse> => {
+  return client.post(`${API_ENDPOINT}/app_auth_tokens.refresh`, '', {
+    headers: {
+      'x-jike-refresh-token': refreshToken,
+      'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+    },
   });
-  return client.post(`${API_ENDPOINT}/app_auth_tokens.refresh`, params);
+};
+
+/**
+ * @summary Do token refreshment
+ * @param error
+ * @returns none
+ */
+const handleRject = async (error: AxiosError): Promise<AxiosError> => {
+  const { config, response } = error;
+
+  // Add a retry property
+  const originalRequest = {
+    retry: false,
+    ...config,
+  };
+
+  /*
+   * When response code is 401, try to refresh the token.
+   * Eject the interceptor so it doesn't loop in case
+   * token refresh causes the 401 response
+   */
+  if (response && response.status === 401 && !originalRequest.retry) {
+    originalRequest.retry = true;
+
+    const refreshToken = localStorage.getItem('refresh-token');
+    if (refreshToken) {
+      const { data } = await appAuthTokensRefresh(refreshToken);
+
+      if (JSON.parse(data.success) === 'true') {
+        // TODO: fix the type
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        client.defaults.headers.common['x-jike-access-token'] = data['x-jike-access-token'];
+
+        // TODO: use DB to store tokens
+        localStorage.setItem('access-token', data['x-jike-access-token']);
+        localStorage.setItem('refresh-token', data['x-jike-refresh-token']);
+
+        client(originalRequest);
+      }
+    }
+  }
+
+  return Promise.reject(error);
 };
 
 const client = axios.create(API_CONFIG);
@@ -38,7 +86,7 @@ client.interceptors.request.use(
     if (token) config.headers['x-jike-access-token'] = token;
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => handleRject(error),
 );
 
 // Response interceptor for API calls
@@ -46,7 +94,6 @@ client.interceptors.response.use(
   // Most reponses are wrapped in a "data" object except for those like refresh token and send code
   (response: AxiosResponse) => {
     // const { data } = response;
-
     // const actualData = data.hasOwnProperty('data') ? data.data : data;
     // return {
     //   ...response,
@@ -54,45 +101,7 @@ client.interceptors.response.use(
     // };
     return response;
   },
-  // Do token refreshment
-  async (error: AxiosError): Promise<AxiosError> => {
-    const { config, response } = error;
-
-    // Add a retry property
-    const originalRequest = {
-      retry: false,
-      ...config,
-    };
-
-    /*
-     * When response code is 401, try to refresh the token.
-     * Eject the interceptor so it doesn't loop in case
-     * token refresh causes the 401 response
-     */
-    if (response && response.status === 401 && !originalRequest.retry) {
-      originalRequest.retry = true;
-
-      const refreshToken = localStorage.getItem('refresh-token');
-      if (refreshToken) {
-        const { data } = await appAuthTokensRefresh(refreshToken);
-
-        if (JSON.parse(data.success) === 'true') {
-          // TODO: fix the type
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          client.defaults.headers.common['x-jike-access-token'] =
-            data['x-jike-access-token'];
-
-          // TODO: use DB to store tokens
-          localStorage.setItem('access-token', data['x-jike-access-token']);
-          localStorage.setItem('refresh-token', data['x-jike-refresh-token']);
-
-          client(originalRequest);
-        }
-      }
-    }
-
-    return Promise.reject(error);
-  }
+  (error) => handleRject(error),
 );
 
 export default client;

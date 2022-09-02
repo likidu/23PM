@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { push, replace } from 'svelte-spa-router';
+
   import ListItem from '../../ui/components/list/ListItem.svelte';
   import NavGroup from '../../ui/components/nav/NavGroup.svelte';
   import { ViewState } from '../../ui/enums';
@@ -7,8 +9,6 @@
   import { getShortcutFromIndex } from '../../ui/utils/getShortcutFromIndex';
 
   import { menu } from '../stores/user';
-
-  import { push } from 'svelte-spa-router';
 </script>
 
 <NavGroup groupId="app-menu">
@@ -27,7 +27,7 @@
               updateView({ viewing: ViewState.Card });
               return;
             }
-            push(item.route);
+            replace(item.route);
           },
         }}
       />
