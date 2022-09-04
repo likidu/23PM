@@ -3,7 +3,7 @@
 
   import ListItem from '../../ui/components/list/ListItem.svelte';
   import NavGroup from '../../ui/components/nav/NavGroup.svelte';
-  import { ViewState } from '../../ui/enums';
+  import { IconSize, ViewState } from '../../ui/enums';
   import { Onyx } from '../../ui/services';
   import { updateView } from '../../ui/stores/view';
   import { getShortcutFromIndex } from '../../ui/utils/getShortcutFromIndex';
@@ -12,16 +12,19 @@
 </script>
 
 <NavGroup groupId="app-menu">
-  <div class="header">OnyxUI Demo</div>
+  <div class="header">Cosmos FM</div>
   <div class="scroller" data-nav-scroller>
     {#each $menu as item, i}
       <ListItem
         icon={item.icon}
+        imageSize={IconSize.Small}
         primaryText={item.text}
         navi={{
           itemId: item.id,
           shortcutKey: getShortcutFromIndex(i),
           onSelect: () => {
+            console.log(`Select a menu. ${item.route}`);
+
             Onyx.appMenu.close();
             if (location.hash.startsWith(`#${item.route}`)) {
               updateView({ viewing: ViewState.Card });

@@ -1,4 +1,13 @@
-export { default as Headphone } from './Headphone.svelte';
-export { default as Message } from './Message.svelte';
-export { default as Play } from './Play.svelte';
-export { default as Pause } from './Pause.svelte';
+export { default as IconBackward } from './IconBackward.svelte';
+export { default as IconDiscover } from './IconDiscover.svelte';
+export { default as IconForward } from './IconForward.svelte';
+export { default as IconHeadphone } from './IconHeadphone.svelte';
+export { default as IconMessage } from './IconMessage.svelte';
+export { default as IconHeart } from './IconHeart.svelte';
+export { default as IconInbox } from './IconInbox.svelte';
+export { default as IconInfo } from './IconInfo.svelte';
+export { default as IconPlay } from './IconPlay.svelte';
+export { default as IconPause } from './IconPause.svelte';
+export { default as IconPlayer } from './IconPlayer.svelte';
+export { default as IconSettings } from './IconSettings.svelte';
+export { default as IconUser } from './IconUser.svelte';

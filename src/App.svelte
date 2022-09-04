@@ -4,6 +4,7 @@
   import Router, { location, replace, pop } from 'svelte-spa-router';
 
   import OnyxApp from './ui/components/frame/OnyxApp.svelte';
+  import Discover from './app/routes/Discover.svelte';
   import Inbox from './app/routes/Inbox.svelte';
   import Episode from './app/routes/Episode.svelte';
   import Player from './app/routes/Player.svelte';
@@ -11,6 +12,7 @@
   import NotFound from './app/routes/NotFound.svelte';
   import Audio from './app/components/Audio.svelte';
   import AppMenu from './app/components/AppMenu.svelte';
+  import StripShade from './app/components/StripShade.svelte';
 
   import { KeyManager, Onyx } from './ui/services';
   import { Priority } from './ui/enums';
@@ -21,7 +23,8 @@
   const queryClient = new QueryClient();
 
   const routes = {
-    '/': Inbox,
+    '/': Discover,
+    '/inbox': Inbox,
     '/welcome/:cardId': Welcome,
     '/episode/:eid': Episode,
     '/player': Player,
@@ -59,4 +62,5 @@
   <QueryClientProvider client={queryClient}>
     <Router {routes} />
   </QueryClientProvider>
+  <StripShade />
 </OnyxApp>

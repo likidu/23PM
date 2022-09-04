@@ -21,8 +21,8 @@
 
   export let params: { cardId: string };
 
-  let area = '+1';
-  let mobile = '2067711184';
+  let area = '+86';
+  let mobile = '13817930979';
   let code = '';
   let toast = '';
   let result: User | LoginWithSMSError;

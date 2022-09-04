@@ -1,7 +1,4 @@
 <script lang="ts">
-  import KaiOS from 'kaios-lib';
-  import { onDestroy } from 'svelte';
-
   import View from '../../ui/components/view/View.svelte';
   import ViewContent from '../../ui/components/view/ViewContent.svelte';
   import Card from '../../ui/components/card/Card.svelte';
@@ -9,32 +6,14 @@
   import CardHeader from '../../ui/components/card/CardHeader.svelte';
   import CardFooter from '../../ui/components/card/CardFooter.svelte';
   import Icon from '../../ui/components/icon/Icon.svelte';
-  import Progressbar from '../../ui/components/form/Progressbar.svelte';
   import Typography from '../../ui/components/Typography.svelte';
 
   import { KeyManager } from '../../ui/services';
-  import { appMenu } from '../../ui/stores';
   import { Priority, RenderState } from '../../ui/enums';
-
-  import MdHome from 'svelte-icons/md/MdHome.svelte';
-
-  import { Play, Pause } from '../assets/icons';
-
-  import { menu } from '../stores/user';
-  import { player } from '../stores/player';
-  import { useEpisode } from '../services';
-  import { formatSeconds } from '../helper';
-
-  let triggered = true;
 
   const keyMan = KeyManager.subscribe(
     {
       onEnter: () => {
-        // triggered = true;
-        console.log(`[Episode] :onEnter`);
-
-        // $player.playing ? pause() : play();
-
         return true;
       },
       onArrowLeft: () => {
@@ -60,32 +39,6 @@
     },
     Priority.High,
   );
-
-  // If query is loaded and eid is not the current one is playing.
-  $: {
-    console.log(`[Episode] : triggered ${triggered}`);
-    triggered = false;
-
-    // if (eid && eid !== $player.eid && triggered) {
-    //   console.log('[Episode] : here.');
-
-    //   stop();
-
-    //   const { mediaKey, duration } = $episode.data;
-    //   load(eid, mediaKey, duration);
-
-    //   triggered = false;
-    // }
-  }
-
-  $menu = [{ id: 'logout', text: 'Log out', route: '/', icon: MdHome }];
-
-  $: {
-    if ($appMenu.state === RenderState.Destroyed) keyMan.enable();
-    else keyMan.disable();
-  }
-
-  onDestroy(() => keyMan.unsubscribe());
 </script>
 
 <View>

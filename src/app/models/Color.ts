@@ -1,5 +1,5 @@
-export interface Color {
+export type Color = {
   original?: string;
   light: string;
   dark: string;
-}
+};

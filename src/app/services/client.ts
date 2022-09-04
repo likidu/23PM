@@ -59,10 +59,8 @@ const handleRject = async (error: AxiosError): Promise<AxiosError> => {
     const refreshToken = localStorage.getItem('refresh-token');
     if (refreshToken) {
       const { data } = await appAuthTokensRefresh(refreshToken);
-
-      if (JSON.parse(data.success) === 'true') {
+      if (data.success) {
         // TODO: fix the type
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         client.defaults.headers.common['x-jike-access-token'] = data['x-jike-access-token'];
 
         // TODO: use DB to store tokens
@@ -101,7 +99,7 @@ client.interceptors.response.use(
     // };
     return response;
   },
-  (error) => handleRject(error),
+  (error) => Promise.reject(error),
 );
 
 export default client;

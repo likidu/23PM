@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, onDestroy } from 'svelte';
+  import { onDestroy } from 'svelte';
   import { push } from 'svelte-spa-router';
 
   import View from '../../ui/components/view/View.svelte';
@@ -14,13 +14,13 @@
   import { appMenu, registerView } from '../../ui/stores';
   import { Priority, RenderState } from '../../ui/enums';
 
-  import MdHome from 'svelte-icons/md/MdHome.svelte';
-
-  import { load, pause, play, skip, skipTo } from '../components/Audio.svelte';
+  import { load, play } from '../components/Audio.svelte';
+  import { IconDiscover, IconInbox, IconPlayer } from '../assets/icons';
 
   import { menu } from '../stores/user';
   import { player } from '../stores/player';
   import { useEpisode } from '../services';
+  import { formatSeconds } from '../helper';
 
   export let params: { eid: string };
 
@@ -55,7 +55,11 @@
 
   registerView({});
 
-  $menu = [{ id: 'logout', text: 'Log ooout', route: '/', icon: MdHome }];
+  $menu = [
+    { id: 'discover', text: 'Discover', route: '#/', icon: IconDiscover },
+    { id: 'inbox', text: 'Inbox', route: '/inbox', icon: IconInbox },
+    { id: 'player', text: 'Player', route: '/player', icon: IconPlayer },
+  ];
 
   onDestroy(() => keyMan.unsubscribe());
 </script>
@@ -72,7 +76,9 @@
         <CardHeader title={episode.podcast.title} />
         <CardContent>
           <img src={episode.podcast.image.thumbnailUrl} alt="Podcast Cover" class="rounded-sm" width="48" />
-          <h4>{episode.title}</h4>
+          <h2>{episode.title}</h2>
+          <h4>{episode.podcast.title}</h4>
+          <caption>{formatSeconds(episode.duration)}</caption>
           <section class="shownotes">{@html episode.shownotes}</section>
         </CardContent>
         <CardFooter>
@@ -83,8 +89,11 @@
   </ViewContent>
 </View>
 
-<style>
-  .shownotes > p {
-    @apply my-1;
+<style lang="postcss">
+  .shownotes {
+    @apply flex flex-col;
+  }
+  .shownotes > :global(p) {
+    @apply mb-4;
   }
 </style>

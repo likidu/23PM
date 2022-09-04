@@ -14,12 +14,10 @@
 
   import { KeyManager } from '../../ui/services';
   import { appMenu } from '../../ui/stores';
-  import { Priority, RenderState } from '../../ui/enums';
-
-  import MdHome from 'svelte-icons/md/MdHome.svelte';
+  import { IconSize, Priority, RenderState } from '../../ui/enums';
 
   import { pause, play, skip, skipTo } from '../components/Audio.svelte';
-  import { Play, Pause } from '../assets/icons';
+  import { IconDiscover, IconPlay, IconPause, IconBackward, IconForward } from '../assets/icons';
 
   import { menu } from '../stores/user';
   import { player } from '../stores/player';
@@ -71,7 +69,7 @@
   // Set progress bar percent and reserve 43 fraction values (100,000 / 100).
   $: progress = Math.round(($player.current / $player.duration) * 100000) / 1000;
 
-  $menu = [{ id: 'logout', text: 'Log out', route: '/', icon: MdHome }];
+  $menu = [{ id: 'discover', text: 'Discover', route: '#/', icon: IconDiscover }];
 
   $: {
     if ($player.eid && $appMenu.state === RenderState.Destroyed) keyMan.enable();
@@ -85,31 +83,50 @@
 
 <View>
   <ViewContent>
-    <Card>
-      {#if $episode.status === 'loading'}
-        <Typography align="center">Loading...</Typography>
-      {:else if $episode.status === 'error'}
-        <Typography align="center">Error!</Typography>
-      {:else}
-        {@const episode = $episode.data}
-        <CardHeader title={episode.podcast.title} />
+    {#if !$player.eid}
+      <Card>
+        <CardHeader title="Player" />
         <CardContent>
-          <img src={episode.image.smallPicUrl} alt="Episode Cover" width="156" />
-          <h4>{episode.title}</h4>
-          <div id="time-tracker" class="flex justify-between">
-            <small>{formatSeconds($player.current)}</small>
-            <small>{formatSeconds($player.duration - $player.current)}</small>
-          </div>
-          <Progressbar value={progress} />
+          <Typography align="center">Nothing is playing...</Typography>
         </CardContent>
-        <CardFooter>
-          {#if $player.playing}
-            <Icon><Pause /></Icon>
-          {:else}
-            <Icon><Play /></Icon>
-          {/if}
-        </CardFooter>
-      {/if}
-    </Card>
+      </Card>
+    {:else}
+      <Card>
+        {#if $episode.status === 'loading'}
+          <Typography align="center">Loading...</Typography>
+        {:else if $episode.status === 'error'}
+          <Typography align="center">Error!</Typography>
+        {:else}
+          {@const episode = $episode.data}
+          <CardHeader title={episode.podcast.title} />
+          <CardContent>
+            <img src={episode.image.smallPicUrl} alt="Episode Cover" width="128" />
+            <h2 class="line-clamp-2">{episode.title}</h2>
+            <div id="time-tracker" class="flex justify-between">
+              <small>{formatSeconds($player.current)}</small>
+              <small>{formatSeconds($player.duration - $player.current)}</small>
+            </div>
+            <Progressbar value={progress} />
+          </CardContent>
+          <CardFooter>
+            <div class="controller">
+              <Icon size={IconSize.Small}><IconBackward /></Icon>
+              {#if $player.playing}
+                <Icon size={IconSize.Large}><IconPause /></Icon>
+              {:else}
+                <Icon size={IconSize.Large}><IconPlay /></Icon>
+              {/if}
+              <Icon size={IconSize.Small}><IconForward /></Icon>
+            </div>
+          </CardFooter>
+        {/if}
+      </Card>
+    {/if}
   </ViewContent>
 </View>
+
+<style lang="postcss">
+  :global(.controller) {
+    @apply flex justify-center items-center space-x-6;
+  }
+</style>

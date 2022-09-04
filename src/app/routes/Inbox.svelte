@@ -12,19 +12,19 @@
   import { Color, IconSize } from '../../ui/enums';
   import { registerView } from '../../ui/stores';
 
-  import MdHome from 'svelte-icons/md/MdHome.svelte';
-
   import { menu } from '../stores/user';
   import { useInboxList } from '../services';
-  import { Message, Headphone } from '../assets/icons';
+  import { IconDiscover, IconInbox, IconPlayer, IconUser, IconMessage, IconHeadphone } from '../assets/icons';
 
   const inbox = useInboxList();
 
   registerView({});
 
   $menu = [
-    { id: 'player', text: 'Player', route: '/player', icon: MdHome },
-    { id: 'logout', text: 'Log out', route: '/', icon: MdHome },
+    { id: 'discover', text: 'Discover', route: '#/', icon: IconDiscover },
+    { id: 'inbox', text: 'Inbox', route: '/inbox', icon: IconInbox },
+    { id: 'player', text: 'Player', route: '/player', icon: IconPlayer },
+    { id: 'user', text: 'User', route: '/user', icon: IconUser },
   ];
 </script>
 
@@ -48,11 +48,12 @@
               >
                 <div slot="bottom" class="stats">
                   <div class="item">
-                    <Icon size={IconSize.Smallest} color={Color.Secondary}><Message /></Icon>
-                    <div>{episode.commentCount}</div>
+                    <Icon size={IconSize.Smallest} color={Color.Secondary}><IconMessage /></Icon>
+                    <span>{episode.commentCount}</span>
                   </div>
                   <div class="item">
-                    <Icon size={IconSize.Smallest} color={Color.Secondary}><Headphone /></Icon>{episode.playCount}
+                    <Icon size={IconSize.Smallest} color={Color.Secondary}><IconHeadphone /></Icon>
+                    <span>{episode.playCount}</span>
                   </div>
                 </div>
               </ListItem>
@@ -64,12 +65,12 @@
   </ViewContent>
 </View>
 
-<style>
+<style lang="postcss">
   .stats {
     color: var(--secondary-text-color);
     @apply flex space-x-6 mt-1;
   }
-  .stats > .item {
-    @apply flex items-center text-xl;
+  :global(.stats .item) {
+    @apply flex items-center space-x-1 text-xl;
   }
 </style>
