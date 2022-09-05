@@ -27,6 +27,7 @@
     { id: 'inbox', text: 'Inbox', route: '/inbox', icon: IconInbox },
     { id: 'player', text: 'Player', route: '/player', icon: IconPlayer },
     { id: 'user', text: 'User', route: '/user', icon: IconUser },
+    { id: 'logout', text: 'Log out', route: '#/', icon: IconUser },
   ];
 </script>
 

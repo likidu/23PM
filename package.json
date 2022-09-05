@@ -1,6 +1,6 @@
 {
   "name": "23PM",
-  "version": "0.1.0",
+  "version": "0.1.3",
   "scripts": {
     "dev": "cross-env NODE_ENV=development vite",
     "build": "vite build",

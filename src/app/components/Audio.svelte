@@ -2,7 +2,8 @@
   import { player } from '../stores/player';
   import { clamp } from '../helper';
 
-  let audio = document.createElement('audio');
+  // let audio = document.createElement('audio');
+  let audio = new Audio();
   // Make KaiOS able to control the volume of it
   audio.mozAudioChannelType = 'content';
 

@@ -11,12 +11,12 @@ import { API_ENDPOINT, API_CONFIG } from './config';
 export const clientHandleError = <T>(error: AxiosError) => {
   if (error.response) {
     const { data, status } = <{ data: T; status: number }>error.response;
-    console.log(status);
+    console.log(`Client status code: ${status}`);
     console.log(data);
 
     return data;
   } else {
-    console.log(error.message);
+    console.error(error.message);
   }
 };
 

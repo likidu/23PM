@@ -17,7 +17,7 @@ export type PhoneNumber = {
 
 export type LoginWithSMS = PhoneNumber & { verifyCode: string };
 
-export type LoginWithSMSError = {
+export type AuthError = {
   success: boolean;
   code: number;
   toast: string;

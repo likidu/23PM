@@ -15,29 +15,30 @@
   import ViewContent from '../../ui/components/view/ViewContent.svelte';
 
   import logo from '../assets/svelte.png';
-  import { user, mobilePhoneNumber } from '../stores/user';
+  import { user } from '../stores/user';
   import { AuthClient } from '../services';
-  import type { LoginWithSMSError, User } from '../models';
+  import type { AuthError, User } from '../models';
+  import Console from '../components/Console.svelte';
+  import ViewFooter from '../../ui/components/view/ViewFooter.svelte';
 
   export let params: { cardId: string };
 
-  let area = '+86';
-  let mobile = '13817930979';
+  let area = '+1';
+  let mobile = '206888063';
   let code = '';
   let toast = '';
-  let result: User | LoginWithSMSError;
 
   registerView({
     cards: [
       {
         id: 'splash',
         title: 'Welcome',
-        onSelect: () => replace('/welcome/splash'),
+        onSelect: () => {},
       },
       {
-        id: 'sendsms',
+        id: 'sms',
         title: 'SMS Code',
-        onSelect: () => replace('/welcome/sendsms'),
+        onSelect: () => {},
       },
       {
         id: 'login',
@@ -48,23 +49,33 @@
     activeCardId: params.cardId ?? 'splash',
   });
 
-  async function sendSMS() {
-    mobilePhoneNumber.set(mobile);
+  function splash() {
+    replace('/welcome/sms');
+  }
 
-    const isCodeSent = await AuthClient.sendCode({
-      mobilePhoneNumber: $mobilePhoneNumber,
+  async function sendSMS() {
+    // Reset toast message
+    toast = '';
+
+    const result = await AuthClient.sendCode({
+      mobilePhoneNumber: mobile,
       areaCode: area,
     });
 
-    // sendCode returns 200 response
-    if (isCodeSent) {
+    // sendCode returns 200 response, and data: {}
+    if (Object.keys(result).length === 0) {
       replace('/welcome/login');
+    } else {
+      toast = (result as AuthError).toast;
     }
   }
 
   async function login() {
-    result = await AuthClient.loginWithSMS({
-      mobilePhoneNumber: $mobilePhoneNumber,
+    // Reset toast message
+    toast = '';
+
+    const result = await AuthClient.loginWithSMS({
+      mobilePhoneNumber: mobile,
       areaCode: area,
       verifyCode: code,
     });
@@ -74,13 +85,13 @@
       $user = result as User;
       replace('/');
     } else {
-      toast = (result as LoginWithSMSError).toast;
+      toast = (result as AuthError).toast;
     }
   }
 
-  onMount(async () => {
-    updateView({ dataStatus: DataStatus.Loaded });
-  });
+  // onMount(async () => {
+  //   updateView({ dataStatus: DataStatus.Loaded });
+  // });
 </script>
 
 <View>
@@ -95,8 +106,8 @@
           <Button
             title="Login with SMS"
             navi={{
-              itemId: 'start',
-              onSelect: async () => replace('/welcome/sendsms'),
+              itemId: 'splash',
+              onSelect: async () => splash(),
             }}
           />
         </CardContent>
@@ -110,10 +121,13 @@
           <Button
             title="Send Verification Code"
             navi={{
-              itemId: 'sendSMS',
+              itemId: 'sms',
               onSelect: async () => sendSMS(),
             }}
           />
+          {#if toast !== ''}
+            <p class="text-red-500">{toast}</p>
+          {/if}
         </CardContent>
       </Card>
     {:else if params.cardId === $view.cards[2].id}
@@ -125,15 +139,16 @@
           <Button
             title="Send Verification Code"
             navi={{
-              itemId: 'sendSMS',
+              itemId: 'login',
               onSelect: async () => login(),
             }}
           />
-          {#if result && $user === undefined}
+          {#if toast !== '' && !$user}
             <p class="text-red-500">{toast}</p>
           {/if}
         </CardContent>
       </Card>
     {/if}
   </ViewContent>
+  <ViewFooter><Console /></ViewFooter>
 </View>
