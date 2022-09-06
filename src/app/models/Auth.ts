@@ -1,14 +1,19 @@
 /**
  * Authorizations
  */
-export interface RefreshToken {
+export type RefreshToken = {
   'x-jike-access-token': string;
   'x-jike-refresh-token': string;
-}
+};
 
-export interface RefreshTokenResponse extends RefreshToken {
+export type RefreshTokenResponse = RefreshToken & {
   success: 'true' | 'false';
-}
+};
+
+export type RefreshTokenStorage = {
+  accessToken: string;
+  refreshToken: string;
+};
 
 export type PhoneNumber = {
   mobilePhoneNumber: string;

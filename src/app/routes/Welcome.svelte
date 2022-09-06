@@ -1,9 +1,10 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onDestroy } from 'svelte';
   import { replace } from 'svelte-spa-router';
 
+  import { KeyManager } from '../../ui/services';
   import { registerView, updateView, view } from '../../ui/stores';
-  import { DataStatus } from '../../ui/enums';
+  import { DataStatus, Priority } from '../../ui/enums';
 
   import Button from '../../ui/components/buttons/Button.svelte';
   import Card from '../../ui/components/card/Card.svelte';
@@ -13,20 +14,35 @@
   import Typography from '../../ui/components/Typography.svelte';
   import View from '../../ui/components/view/View.svelte';
   import ViewContent from '../../ui/components/view/ViewContent.svelte';
+  import ViewFooter from '../../ui/components/view/ViewFooter.svelte';
+  import CardFooter from '../../ui/components/card/CardFooter.svelte';
 
   import logo from '../assets/svelte.png';
   import { user } from '../stores/user';
   import { AuthClient } from '../services';
   import type { AuthError, User } from '../models';
   import Console from '../components/Console.svelte';
-  import ViewFooter from '../../ui/components/view/ViewFooter.svelte';
 
   export let params: { cardId: string };
 
   let area = '+1';
-  let mobile = '206888063';
+  let mobile = '2067711184';
   let code = '';
   let toast = '';
+
+  const keyMan = KeyManager.subscribe(
+    {
+      onSoftLeft: () => {
+        if (params.cardId === 'sms') {
+          replace('/welcome/splash');
+        } else if (params.cardId === 'login') {
+          replace('/welcome/splash');
+        }
+        return true;
+      },
+    },
+    Priority.High,
+  );
 
   registerView({
     cards: [
@@ -82,7 +98,7 @@
 
     if (!(result.hasOwnProperty('success') && result['success'] === false)) {
       // Save to store: user
-      $user = result as User;
+      user.update(result as User);
       replace('/');
     } else {
       toast = (result as AuthError).toast;
@@ -92,13 +108,14 @@
   // onMount(async () => {
   //   updateView({ dataStatus: DataStatus.Loaded });
   // });
+  onDestroy(() => keyMan.unsubscribe());
 </script>
 
 <View>
   <ViewContent>
     {#if params.cardId === $view.cards[0].id}
       <Card cardId={$view.cards[0].id}>
-        <CardHeader />
+        <CardHeader title="Cosmos FM" />
         <CardContent>
           <div class="logo">
             <img src={logo} alt="Svelte Logo" class="inline-box h-48 w-48" />
@@ -119,7 +136,7 @@
           <Typography align="center" padding="both">Enter your mobile phone</Typography>
           <InputRow label="Mobile" value={mobile} placeholder="Mobile number..." onChange={(val) => (mobile = val)} />
           <Button
-            title="Send Verification Code"
+            title="Send Code"
             navi={{
               itemId: 'sms',
               onSelect: async () => sendSMS(),
@@ -129,6 +146,7 @@
             <p class="text-red-500">{toast}</p>
           {/if}
         </CardContent>
+        <CardFooter><p>Back</p></CardFooter>
       </Card>
     {:else if params.cardId === $view.cards[2].id}
       <Card>
@@ -137,7 +155,7 @@
           <Typography align="center" padding="both">Enter your verification code</Typography>
           <InputRow label="Verify code" value={code} placeholder="Verify code..." onChange={(val) => (code = val)} />
           <Button
-            title="Send Verification Code"
+            title="Login"
             navi={{
               itemId: 'login',
               onSelect: async () => login(),
@@ -147,6 +165,7 @@
             <p class="text-red-500">{toast}</p>
           {/if}
         </CardContent>
+        <CardFooter><p>Back</p></CardFooter>
       </Card>
     {/if}
   </ViewContent>

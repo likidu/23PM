@@ -25,10 +25,10 @@
   import { formatSeconds } from '../helper';
 
   let progress = 0;
-  let eid: string;
+
+  const imageSize = 128;
 
   const episode = useEpisode($player.eid);
-  $: eid = $episode.data?.eid;
 
   const keyMan = KeyManager.subscribe(
     {
@@ -76,9 +76,7 @@
     else keyMan.disable();
   }
 
-  onDestroy(() => {
-    keyMan.unsubscribe();
-  });
+  onDestroy(() => keyMan.unsubscribe());
 </script>
 
 <View>
@@ -100,7 +98,11 @@
           {@const episode = $episode.data}
           <CardHeader title={episode.podcast.title} />
           <CardContent>
-            <img src={episode.image.smallPicUrl} alt="Episode Cover" width="128" />
+            {#if episode.image}
+              <img src={episode.image.smallPicUrl} alt="Episode Cover" width={imageSize} />
+            {:else}
+              <img src={episode.podcast.image.smallPicUrl} alt="Podcast Cover" width={imageSize} />
+            {/if}
             <h2 class="line-clamp-2">{episode.title}</h2>
             <div id="time-tracker" class="flex justify-between">
               <small>{formatSeconds($player.current)}</small>

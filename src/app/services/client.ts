@@ -1,7 +1,10 @@
 import axios, { AxiosResponse } from 'axios';
 import type { AxiosRequestConfig, AxiosPromise, AxiosError } from 'axios';
-import type { RefreshTokenResponse } from '../models';
+import { get } from 'svelte/store';
+import type { RefreshTokenResponse, RefreshTokenStorage } from '../models';
 import { API_ENDPOINT, API_CONFIG } from './config';
+
+import { tokens } from '../stores/user';
 
 /**
  * @summary Handler of client error from acutal API calls
@@ -56,16 +59,18 @@ const handleRject = async (error: AxiosError): Promise<AxiosError> => {
   if (response && response.status === 401 && !originalRequest.retry) {
     originalRequest.retry = true;
 
-    const refreshToken = localStorage.getItem('refresh-token');
+    const { refreshToken } = get(tokens) || {};
     if (refreshToken) {
       const { data } = await appAuthTokensRefresh(refreshToken);
       if (data.success) {
         // TODO: fix the type
         client.defaults.headers.common['x-jike-access-token'] = data['x-jike-access-token'];
 
-        // TODO: use DB to store tokens
-        localStorage.setItem('access-token', data['x-jike-access-token']);
-        localStorage.setItem('refresh-token', data['x-jike-refresh-token']);
+        // Update token store and save to LocalStorage
+        tokens.update({
+          accessToken: data['x-jike-access-token'],
+          refreshToken: data['x-jike-refresh-token'],
+        });
 
         client(originalRequest);
       }
@@ -80,8 +85,8 @@ const client = axios.create(API_CONFIG);
 // Request interceptor for API calls
 client.interceptors.request.use(
   (config: AxiosRequestConfig) => {
-    const token = localStorage.getItem('access-token');
-    if (token) config.headers['x-jike-access-token'] = token;
+    const { accessToken } = get(tokens) || {};
+    if (accessToken) config.headers['x-jike-access-token'] = accessToken;
     return config;
   },
   (error) => handleRject(error),

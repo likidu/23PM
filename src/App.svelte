@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
   import { QueryClient, QueryClientProvider } from '@sveltestack/svelte-query';
   import Router, { location, replace, pop } from 'svelte-spa-router';
 
@@ -8,6 +7,7 @@
   import Inbox from './app/routes/Inbox.svelte';
   import Episode from './app/routes/Episode.svelte';
   import Player from './app/routes/Player.svelte';
+  import User from './app/routes/User.svelte';
   import Welcome from './app/routes/Welcome.svelte';
   import NotFound from './app/routes/NotFound.svelte';
   import Audio from './app/components/Audio.svelte';
@@ -28,6 +28,7 @@
     '/welcome/:cardId': Welcome,
     '/episode/:eid': Episode,
     '/player': Player,
+    '/user': User,
     '*': NotFound,
   };
 
@@ -49,9 +50,7 @@
 
   $: Onyx.settings.update($settings);
 
-  onMount(() => {
-    if ($user === undefined) replace('/welcome/splash');
-  });
+  $: if (!$user) replace('/welcome/splash');
 </script>
 
 <OnyxApp>

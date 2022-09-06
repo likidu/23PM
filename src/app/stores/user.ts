@@ -1,6 +1,31 @@
 import { writable } from 'svelte/store';
-import type { MenuItem, User } from '../models';
-
-export const user = writable<User>(undefined);
+import { Storage } from '../../ui/services';
+import type { MenuItem, RefreshTokenStorage, User } from '../models';
 
 export const menu = writable<MenuItem[]>([]);
+
+function createStore<T>(key: 'user' | 'auth', initStore: T) {
+  const { subscribe, update, set } = writable<T>(initStore);
+
+  subscribe((val) => {
+    Storage.set(key, val);
+  });
+
+  return {
+    subscribe,
+    update: function (data: Partial<T>) {
+      update((previous) => ({ ...previous, ...data }));
+    },
+    reset: function () {
+      set(null);
+    },
+  };
+}
+
+const storedUser = Storage.get<User>('user');
+
+export const user = createStore<User>('user', storedUser);
+
+const storedTokens = Storage.get<RefreshTokenStorage>('auth');
+
+export const tokens = createStore<RefreshTokenStorage>('auth', storedTokens);

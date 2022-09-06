@@ -1,5 +1,9 @@
-import type { LoginWithSMS, AuthError, PhoneNumber, User, RefreshToken } from '../models';
+import { get } from 'svelte/store';
 import client, { clientHandleError } from './client';
+
+import { user, tokens } from '../stores/user';
+
+import type { LoginWithSMS, AuthError, PhoneNumber, User, RefreshToken } from '../models';
 
 export class AuthClient {
   static async sendCode(mobile: PhoneNumber): Promise<{} | AuthError> {
@@ -23,9 +27,11 @@ export class AuthClient {
         verify,
       );
 
-      // Save to LocalStorage
-      localStorage.setItem('access-token', headers['x-jike-access-token']);
-      localStorage.setItem('refresh-token', headers['x-jike-refresh-token']);
+      // Update token store and save to LocalStorage
+      tokens.update({
+        accessToken: headers['x-jike-access-token'],
+        refreshToken: headers['x-jike-refresh-token'],
+      });
 
       return data.data.user as User;
     } catch (error) {
@@ -34,7 +40,7 @@ export class AuthClient {
   }
 
   static logout() {
-    localStorage.removeItem('access-token');
-    localStorage.removeItem('refresh-token');
+    user.reset();
+    tokens.reset();
   }
 }

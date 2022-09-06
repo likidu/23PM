@@ -14,7 +14,7 @@
   import { appMenu, registerView } from '../../ui/stores';
   import { Priority, RenderState } from '../../ui/enums';
 
-  import { load, play } from '../components/Audio.svelte';
+  import { load, play, stop } from '../components/Audio.svelte';
   import { IconDiscover, IconInbox, IconPlayer } from '../assets/icons';
 
   import { menu } from '../stores/user';

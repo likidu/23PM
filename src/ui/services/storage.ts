@@ -1,4 +1,4 @@
-type StorageKey = 'settings' | 'user';
+type StorageKey = 'settings' | 'user' | 'auth';
 
 export class Storage {
   static get<T>(key: StorageKey): T {
