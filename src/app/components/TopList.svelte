@@ -30,9 +30,3 @@
     />
   {/each}
 {/each}
-
-<style lang="postcss">
-  .comment {
-    @apply p-1;
-  }
-</style>
