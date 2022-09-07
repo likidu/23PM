@@ -20,7 +20,7 @@
         imageSize={IconSize.Small}
         primaryText={item.text}
         navi={{
-          itemId: item.id,
+          itemId: `menu_${i + 1}`,
           shortcutKey: getShortcutFromIndex(i),
           onSelect: () => {
             console.log(`Select a menu. ${item.route}`);

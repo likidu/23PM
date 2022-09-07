@@ -82,7 +82,11 @@
           <section class="shownotes">{@html episode.shownotes}</section>
         </CardContent>
         <CardFooter>
-          <p>Play</p>
+          <footer class="softkey">
+            <div>Menu</div>
+            <div>Play</div>
+            <div>More</div>
+          </footer>
         </CardFooter>
       {/if}
     </Card>

@@ -13,12 +13,14 @@
   import { Priority, RenderState } from '../../ui/enums';
 
   import EditorPickList from '../components/EditorPickList.svelte';
+  import TopList from '../components/TopList.svelte';
   import { IconDiscover, IconInbox, IconPlayer, IconUser } from '../assets/icons';
 
   import { menu } from '../stores/user';
-  import { useEditorPickList } from '../services';
+  import { useEditorPickList, useDiscoveryList } from '../services';
 
-  const editorPick = useEditorPickList();
+  // const editorPick = useEditorPickList();
+  const discoveryList = useDiscoveryList();
 
   registerView({});
 
@@ -35,12 +37,13 @@
     <Card>
       <CardHeader title="Discover" />
       <CardContent>
-        {#if $editorPick.status === 'loading'}
+        {#if $discoveryList.status === 'loading'}
           <span>Loading...</span>
-        {:else if $editorPick.status === 'error'}
+        {:else if $discoveryList.status === 'error'}
           <span class="text-red-500">Error!</span>
         {:else}
-          <EditorPickList editorPick={$editorPick.data} />
+          <EditorPickList editorPick={$discoveryList.data.data[0]} />
+          <TopList top={$discoveryList.data.data[1]} />
         {/if}
       </CardContent>
     </Card>

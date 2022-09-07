@@ -104,7 +104,7 @@ client.interceptors.response.use(
     // };
     return response;
   },
-  (error) => Promise.reject(error),
+  (error) => handleRject(error),
 );
 
 export default client;

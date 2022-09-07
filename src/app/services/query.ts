@@ -3,16 +3,18 @@
  **/
 
 import { useQuery } from '@sveltestack/svelte-query';
-import type { EditorPickList, Episode, InboxList, Media } from '../models';
+import type { DiscoveryList, EditorPickList, Episode, InboxList, Media } from '../models';
 import client from './client';
 
-// Editor pick list
-const editorPickList = async (limit = 1): Promise<EditorPickList> => {
-  const { data } = await client.post('editor-pick/list', { limit });
+// Discovery list
+const discoveryList = async (type?: string): Promise<DiscoveryList> => {
+  const request = type ? { returnAll: false, type } : { returnAll: false };
+  const { data } = await client.post('discovery-feed/list', request);
   return data;
 };
 
-export const useEditorPickList = () => useQuery<EditorPickList>('editor-pick', () => editorPickList());
+export const useDiscoveryList = (type?: string) =>
+  useQuery<DiscoveryList>(['discovery', type], () => discoveryList(type));
 
 // Inbox list
 const inboxList = async (limit = 10): Promise<InboxList> => {
