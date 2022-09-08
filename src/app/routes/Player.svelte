@@ -26,7 +26,7 @@
 
   let progress = 0;
 
-  const imageSize = 128;
+  const imageSize = 144;
 
   const episode = useEpisode($player.eid);
 
@@ -96,22 +96,24 @@
           <Typography align="center">Error!</Typography>
         {:else}
           {@const episode = $episode.data}
-          <CardHeader title={episode.podcast.title} />
+          <CardHeader title={episode.podcast.title} style={`color: ${episode.podcast.color.light}`} />
           <CardContent>
-            {#if episode.image}
-              <img src={episode.image.smallPicUrl} alt="Episode Cover" width={imageSize} />
-            {:else}
-              <img src={episode.podcast.image.smallPicUrl} alt="Podcast Cover" width={imageSize} />
-            {/if}
-            <h2 class="line-clamp-2">{episode.title}</h2>
+            <div class="player-content">
+              {#if episode.image}
+                <img src={episode.image.smallPicUrl} alt="Episode Cover" width={imageSize} />
+              {:else}
+                <img src={episode.podcast.image.smallPicUrl} alt="Podcast Cover" width={imageSize} />
+              {/if}
+              <h2 class="line-clamp-2">{episode.title}</h2>
+            </div>
+          </CardContent>
+          <CardFooter>
             <div id="time-tracker" class="flex justify-between">
               <small>{formatSeconds($player.current)}</small>
               <small>{formatSeconds($player.duration - $player.current)}</small>
             </div>
             <Progressbar value={progress} />
-          </CardContent>
-          <CardFooter>
-            <div class="controller">
+            <div class="player-controller">
               <Icon size={IconSize.Small}><IconBackward /></Icon>
               {#if $player.playing}
                 <Icon size={IconSize.Large}><IconPause /></Icon>
@@ -126,9 +128,3 @@
     {/if}
   </ViewContent>
 </View>
-
-<style lang="postcss">
-  :global(.controller) {
-    @apply flex justify-center items-center space-x-6;
-  }
-</style>

@@ -1,6 +1,15 @@
+<script context="module" lang="ts">
+  import 'dayjs/esm/locale/zh-cn';
+  import dayjs from 'dayjs/esm';
+
+  // Day.js use Chinese locale
+  dayjs.locale('zh-cn');
+</script>
+
 <script lang="ts">
   import { onDestroy } from 'svelte';
   import { push } from 'svelte-spa-router';
+  import Time from 'svelte-time';
 
   import View from '../../ui/components/view/View.svelte';
   import ViewContent from '../../ui/components/view/ViewContent.svelte';
@@ -8,14 +17,15 @@
   import CardContent from '../../ui/components/card/CardContent.svelte';
   import CardHeader from '../../ui/components/card/CardHeader.svelte';
   import CardFooter from '../../ui/components/card/CardFooter.svelte';
+  import Icon from '../../ui/components/icon/Icon.svelte';
   import Typography from '../../ui/components/Typography.svelte';
 
   import { KeyManager } from '../../ui/services';
   import { appMenu, registerView } from '../../ui/stores';
-  import { Priority, RenderState } from '../../ui/enums';
+  import { IconSize, Priority, RenderState } from '../../ui/enums';
 
   import { load, play, stop } from '../components/Audio.svelte';
-  import { IconDiscover, IconInbox, IconPlayer } from '../assets/icons';
+  import { IconDiscover, IconInbox, IconPlayer, IconMenu, IconComment } from '../assets/icons';
 
   import { menu } from '../stores/user';
   import { player } from '../stores/player';
@@ -73,19 +83,25 @@
         <Typography align="center">Error!</Typography>
       {:else}
         {@const episode = $episode.data}
-        <CardHeader title={episode.podcast.title} />
+        {@const podcastColor = episode.podcast.color.dark}
+        <CardHeader title={episode.podcast.title} style={`color: ${podcastColor}`} />
         <CardContent>
-          <img src={episode.podcast.image.thumbnailUrl} alt="Podcast Cover" class="rounded-sm" width="48" />
-          <h2>{episode.title}</h2>
-          <h4>{episode.podcast.title}</h4>
-          <caption>{formatSeconds(episode.duration)}</caption>
-          <section class="shownotes">{@html episode.shownotes}</section>
+          <div class="episode-content">
+            <img src={episode.podcast.image.thumbnailUrl} alt="Podcast Cover" class="rounded-sm" width="48" />
+            <h1>{episode.title}</h1>
+            <div class="flex space-x-2 text-secondary mb-4">
+              <span>{formatSeconds(episode.duration)}</span>
+              <span>/</span>
+              <span><Time relative timestamp={episode.pubDate} /></span>
+            </div>
+            <section class="shownotes">{@html episode.shownotes}</section>
+          </div>
         </CardContent>
         <CardFooter>
           <footer class="softkey">
-            <div>Menu</div>
-            <div>Play</div>
-            <div>More</div>
+            <div><Icon size={IconSize.Small} color={podcastColor}><IconMenu /></Icon></div>
+            <div style={`color: ${podcastColor}`}>Play</div>
+            <div><Icon size={IconSize.Small} color={podcastColor}><IconComment /></Icon></div>
           </footer>
         </CardFooter>
       {/if}

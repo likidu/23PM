@@ -10,12 +10,7 @@
   setContext<CardContext>(ContextKey.Card, { cardId });
 </script>
 
-<NavGroup
-  groupId="card"
-  enableCardSwitching={true}
-  updateRoute={true}
-  initialFocusedId={Route.getState().focusedId}
->
+<NavGroup groupId="card" enableCardSwitching={true} updateRoute={true} initialFocusedId={Route.getState().focusedId}>
   <slot />
 </NavGroup>
 
@@ -24,7 +19,7 @@
     height: 100%;
     display: flex;
     flex-direction: column;
-    background-color: var(--card-color);
+    /* background-color: var(--card-color); */
     color: var(--text-color);
     border-radius: var(--radius) var(--radius) var(--radius) var(--radius);
     border: 1px solid var(--card-border-color);

@@ -5,6 +5,7 @@
 :root {
   /* Uesr defined */
   --svelte-rgb: 255, 62, 0;
+  --cosmos-rgb: 77, 168, 215;
 
   --card-color-h: 210;
   --card-color-s: 13%;
@@ -112,6 +113,10 @@ h5 {
   padding: 0;
 }
 
+h1 {
+  font-size: 1.8rem;
+}
+
 input {
   border: none;
   outline: none;
@@ -132,4 +137,20 @@ input {
 
 .softkey > div:last-child {
   @apply flex justify-end w-full
+}
+
+.episode-content {
+  @apply px-2
+}
+
+.player-content {
+  @apply flex flex-col items-center px-4;
+}
+
+.player-content > img {
+  @apply rounded-md drop-shadow-xl
+}
+
+.player-controller {
+  @apply flex justify-center items-center space-x-6;
 }

@@ -14,7 +14,7 @@
 
   import { menu } from '../stores/user';
   import { useInboxList } from '../services';
-  import { IconDiscover, IconInbox, IconPlayer, IconUser, IconMessage, IconHeadphone } from '../assets/icons';
+  import { IconDiscover, IconInbox, IconPlayer, IconUser, IconComment, IconHeadphone } from '../assets/icons';
 
   const inbox = useInboxList();
 
@@ -48,7 +48,7 @@
               >
                 <div slot="bottom" class="stats">
                   <div class="item">
-                    <Icon size={IconSize.Smallest} color={Color.Secondary}><IconMessage /></Icon>
+                    <Icon size={IconSize.Smallest} color={Color.Secondary}><IconComment /></Icon>
                     <span>{episode.commentCount}</span>
                   </div>
                   <div class="item">

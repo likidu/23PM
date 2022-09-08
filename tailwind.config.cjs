@@ -17,8 +17,17 @@ module.exports = {
         'Helvetica Neue',
         'sans-serif',
       ],
+      colors: {
+        primary: 'var(--text-color)',
+        secondary: 'var(--secondary-text-color)',
+        divider: 'var(--divider-color)',
+        accent: 'var(--accent-color)',
+        focus: 'var(--focus-color)',
+        card: 'var(--card-color)',
+        'card-border': 'var(--card-border-color)',
+      },
       linearGradientColors: {
-        'gray-cover': ['rgba(229, 231, 235) 0%', 'white 70%', 'white 100%'],
+        'gray-cover': ['rgba(229, 231, 235) 0%', 'white 20%', 'white 100%'],
         'gray-strip': ['rgb(156, 163, 175)', 'rgb(156, 163, 175) 2px', 'white 2px', 'white'],
       },
       repeatingLinearGradientDirections: (theme) => theme('linearGradientDirections'), // defaults to this value

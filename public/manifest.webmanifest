@@ -5,7 +5,7 @@
   "short_name": "CosmosFM",
   "categories": ["social"],
   "description": "A Cosmos FM client for KaiOS",
-  "theme_color": "#e4572e",
+  "theme_color": "#4da8d7",
   "background_color": "#ffffff",
   "icons": [
     {
@@ -46,7 +46,7 @@
       "wifidata": {},
       "geolocation": {}
     },
-    "focus_color": "#e4572e",
+    "focus_color": "#4da8d7",
     "developer": {
       "name": "Liki Du",
       "url": "https://likidu.com"

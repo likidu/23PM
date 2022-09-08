@@ -8,6 +8,8 @@
   import Icon from '../icon/Icon.svelte';
 
   export let title: string = undefined;
+  let css: string = '';
+  export { css as style };
 
   const context = getContext<CardContext>(ContextKey.Card);
 
@@ -33,6 +35,7 @@
     class="title"
     class:pad-left={!hasPrevCard && hasNextCard}
     class:pad-right={!hasNextCard && hasPrevCard}
+    style={css}
   >
     {title ?? cardTitle}
   </div>
