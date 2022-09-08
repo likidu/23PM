@@ -11,6 +11,7 @@
   import { push } from 'svelte-spa-router';
   import Time from 'svelte-time';
 
+  import Button from '../../ui/components/buttons/Button.svelte';
   import View from '../../ui/components/view/View.svelte';
   import ViewContent from '../../ui/components/view/ViewContent.svelte';
   import Card from '../../ui/components/card/Card.svelte';
@@ -18,6 +19,7 @@
   import CardHeader from '../../ui/components/card/CardHeader.svelte';
   import CardFooter from '../../ui/components/card/CardFooter.svelte';
   import Icon from '../../ui/components/icon/Icon.svelte';
+  import NavItem from '../../ui/components/nav/NavItem.svelte';
   import Typography from '../../ui/components/Typography.svelte';
 
   import { KeyManager } from '../../ui/services';
@@ -25,7 +27,7 @@
   import { IconSize, Priority, RenderState } from '../../ui/enums';
 
   import { load, play, stop } from '../components/Audio.svelte';
-  import { IconDiscover, IconInbox, IconPlayer, IconMenu, IconComment } from '../assets/icons';
+  import { IconDiscover, IconInbox, IconPlayer, IconMenu, IconComment, IconChevronRight } from '../assets/icons';
 
   import { menu } from '../stores/user';
   import { player } from '../stores/player';
@@ -35,6 +37,7 @@
   export let params: { eid: string };
 
   let eid: string;
+  let linkSelected = false;
 
   const episode = useEpisode(params.eid);
   $: eid = $episode.data?.eid;
@@ -63,6 +66,13 @@
     else keyMan.disable();
   }
 
+  // $: {
+  //   console.log(linkSelected);
+
+  //   if (linkSelected) keyMan.disable();
+  //   else keyMan.enable();
+  // }
+
   registerView({});
 
   $menu = [
@@ -89,11 +99,27 @@
           <div class="episode-content">
             <img src={episode.podcast.image.thumbnailUrl} alt="Podcast Cover" class="rounded-sm" width="48" />
             <h1>{episode.title}</h1>
-            <div class="flex space-x-2 text-secondary mb-4">
-              <span>{formatSeconds(episode.duration)}</span>
-              <span>/</span>
-              <span><Time relative timestamp={episode.pubDate} /></span>
-            </div>
+            <NavItem
+              navi={{
+                itemId: 'episode-section-1',
+                onFocus: () => keyMan.disable(),
+                onBlur: () => keyMan.enable(),
+                onSelect: () => push(`/podcast/${episode.podcast.pid}`),
+              }}
+            >
+              <div class="flex items-center">
+                <p><strong>{episode.podcast.title}</strong></p>
+                <Icon size={IconSize.Small}><IconChevronRight /></Icon>
+              </div>
+            </NavItem>
+            <!-- Wrap below in NavItem just for the focus move away from the podcast link -->
+            <NavItem highlight={false} navi={{ itemId: 'episode-section-2' }}>
+              <div class="flex space-x-2 text-secondary mb-4">
+                <span>{formatSeconds(episode.duration)}</span>
+                <span>/</span>
+                <span><Time relative timestamp={episode.pubDate} /></span>
+              </div>
+            </NavItem>
             <section class="shownotes">{@html episode.shownotes}</section>
           </div>
         </CardContent>

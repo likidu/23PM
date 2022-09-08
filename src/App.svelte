@@ -6,6 +6,7 @@
   import Discover from './app/routes/Discover.svelte';
   import Inbox from './app/routes/Inbox.svelte';
   import Episode from './app/routes/Episode.svelte';
+  import Podcast from './app/routes/Podcast.svelte';
   import Player from './app/routes/Player.svelte';
   import User from './app/routes/User.svelte';
   import Welcome from './app/routes/Welcome.svelte';
@@ -27,6 +28,7 @@
     '/inbox': Inbox,
     '/welcome/:cardId': Welcome,
     '/episode/:eid': Episode,
+    '/podcast/:pid': Podcast,
     '/player': Player,
     '/user': User,
     '*': NotFound,

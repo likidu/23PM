@@ -1,4 +1,5 @@
 export { default as IconBackward } from './IconBackward.svelte';
+export { default as IconChevronRight } from './IconChevronRight.svelte';
 export { default as IconDiscover } from './IconDiscover.svelte';
 export { default as IconForward } from './IconForward.svelte';
 export { default as IconHeadphone } from './IconHeadphone.svelte';

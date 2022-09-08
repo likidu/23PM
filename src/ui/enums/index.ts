@@ -1,4 +1,5 @@
 export * from './animations';
+export * from './alignment';
 export * from './color';
 export * from './contextKey';
 export * from './dataStatus';
