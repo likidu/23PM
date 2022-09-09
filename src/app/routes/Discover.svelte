@@ -17,9 +17,8 @@
   import { IconDiscover, IconInbox, IconPlayer, IconUser } from '../assets/icons';
 
   import { menu } from '../stores/user';
-  import { useEditorPickList, useDiscoveryList } from '../services';
+  import { useDiscoveryList } from '../services';
 
-  // const editorPick = useEditorPickList();
   const discoveryList = useDiscoveryList();
 
   registerView({});

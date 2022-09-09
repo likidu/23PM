@@ -8,33 +8,21 @@ const MediaSourceMode = {
   PUBLIC: 'PUBLIC',
 } as const;
 
-interface MediaSource {
+type MediaSource = {
   mode: MediaSourceMode;
   url: string;
-}
+};
 
-export interface MediaContent {
+export type MediaContent = {
   id: string;
   size: number;
   mimeType: string;
   source: MediaSource;
   backupSource: MediaSource;
-}
+};
 
-export type EpisodeType = typeof EpisodeType[keyof typeof EpisodeType];
-
-const EpisodeType = {
-  EPISODE: 'EPISODE',
-} as const;
-
-export type EpisodeStatus = typeof EpisodeStatus[keyof typeof EpisodeStatus];
-
-const EpisodeStatus = {
-  NORMAL: 'NORMAL',
-} as const;
-
-export interface Episode {
-  type: EpisodeType;
+export type Episode = {
+  type: 'EPISODE';
   eid: string;
   pid: string;
   title: string;
@@ -49,11 +37,27 @@ export interface Episode {
   playCount: number;
   favoriteCount: number;
   pubDate: string;
-  status: EpisodeStatus;
+  status: 'NORMAL';
   duration: number;
   podcast: Podcast;
   isPlayed: boolean;
   isFinished: boolean;
   isPicked: boolean;
   isFavorited: boolean;
-}
+  payType: 'FREE';
+};
+
+export type EpisodeList = {
+  data: Episode[];
+  loadNextKey: {
+    pubDate: string;
+    id: string;
+    direction: 'NEXT';
+  };
+  loadMoreKey: {
+    pubDate: string;
+    id: string;
+    direction: 'NEXT';
+  };
+  total: number;
+};

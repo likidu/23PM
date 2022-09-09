@@ -2,33 +2,8 @@ import type { Color } from './Color';
 import type { Image } from './Image';
 import type { User } from './User';
 
-export type PodcastType = typeof PodcastType[keyof typeof PodcastType];
-
-const PodcastType = {
-  PODCAST: 'PODCAST',
-} as const;
-
-export type PodcastSyncMode = typeof PodcastSyncMode[keyof typeof PodcastSyncMode];
-
-const PodcastSyncMode = {
-  RSS: 'RSS',
-} as const;
-
-export type PodcastSubscriptionStatus = typeof PodcastSubscriptionStatus[keyof typeof PodcastSubscriptionStatus];
-
-const PodcastSubscriptionStatus = {
-  OFF: 'OFF',
-  ON: 'ON',
-} as const;
-
-export type PodcastStatus = typeof PodcastStatus[keyof typeof PodcastStatus];
-
-const PodcastStatus = {
-  NORMAL: 'NORMAL',
-} as const;
-
-export interface Podcast {
-  type: PodcastType;
+export type Podcast = {
+  type: 'PODCAST';
   pid: string;
   title: string;
   author: string;
@@ -36,13 +11,13 @@ export interface Podcast {
   subscriptionCount: number;
   image: Image;
   color: Color;
-  syncMode: PodcastSyncMode;
+  syncMode: 'RSS';
   episodeCount: number;
   latestEpisodePubDate: string;
-  subscriptionStatus: PodcastSubscriptionStatus;
+  subscriptionStatus: 'ON' | 'OFF';
   subscriptionPush: boolean;
   subscriptionStar: boolean;
-  status: PodcastStatus;
+  status: 'NORMAL';
   payEpisodeCount: number;
   podcasters: User[];
-}
+};

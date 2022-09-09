@@ -37,7 +37,6 @@
   export let params: { eid: string };
 
   let eid: string;
-  let linkSelected = false;
 
   const episode = useEpisode(params.eid);
   $: eid = $episode.data?.eid;

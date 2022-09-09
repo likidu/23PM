@@ -6,6 +6,6 @@ type LoadMoreKey = {
 };
 
 export type InboxList = {
-  loadMoreKey: LoadMoreKey;
   data: Episode[];
+  loadMoreKey: LoadMoreKey;
 };

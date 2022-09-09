@@ -109,8 +109,8 @@
           </CardContent>
           <CardFooter>
             <div id="time-tracker" class="flex justify-between">
-              <small>{formatSeconds($player.current)}</small>
-              <small>{formatSeconds($player.duration - $player.current)}</small>
+              <span class="text-sm">{formatSeconds($player.current)}</span>
+              <span class="text-sm">{formatSeconds($player.duration - $player.current)}</span>
             </div>
             <Progressbar value={progress} />
             <div class="player-controller">

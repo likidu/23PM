@@ -17,6 +17,10 @@ module.exports = {
         'Helvetica Neue',
         'sans-serif',
       ],
+      fontSize: {
+        sm: '1.2rem',
+        base: '1.4rem',
+      },
       colors: {
         primary: 'var(--text-color)',
         secondary: 'var(--secondary-text-color)',

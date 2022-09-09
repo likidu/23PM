@@ -5,4 +5,5 @@ export * from './Discover';
 export * from './Inbox';
 export * from './Menu';
 export * from './Media';
+export * from './Podcast';
 export * from './User';
