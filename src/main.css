@@ -5,15 +5,15 @@
 :root {
   /* Uesr defined */
   --svelte-rgb: 255, 62, 0;
-  --cosmos-rgb: 77, 168, 215;
 
   --card-color-h: 210;
   --card-color-s: 13%;
   --card-color-l: 99%;
 
-  --accent-color-h: 232;
-  --accent-color-s: 64%;
-  --accent-color-l: 54%;
+  /* Cosmos FM theme color */
+  --accent-color-h: 200;
+  --accent-color-s: 63.3%;
+  --accent-color-l: 57.3%;
 
   --text-color-h: 0;
   --text-color-s: 0%;
@@ -62,9 +62,9 @@
     var(--default-a)
   );
   --focus-color: hsla(
-    var(--accent-color-h),
-    var(--accent-color-s),
-    var(--accent-color-l),
+    var(--text-color-h),
+    var(--text-color-s),
+    var(--text-color-l),
     var(--focus-color-a)
   );
   --card-color: hsla(

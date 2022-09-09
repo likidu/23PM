@@ -4,21 +4,21 @@ import { themes as baseThemes } from '../ui/themes';
 export const themes: ThemeConfig[] = [
   ...baseThemes,
   {
-    id: 'dim',
+    id: 'cosmos',
     values: {
-      cardColorH: 240,
-      cardColorS: 10,
-      cardColorL: 44,
+      cardColorH: 0,
+      cardColorS: 0,
+      cardColorL: 100,
 
-      accentColorH: 22,
-      accentColorS: 41,
-      accentColorL: 88,
+      accentColorH: 200,
+      accentColorS: 63.3,
+      accentColorL: 57.3,
 
       textColorH: 0,
       textColorS: 0,
-      textColorL: 100,
+      textColorL: 0,
 
-      focusColorA: 20,
+      focusColorA: 7,
       dividerColorA: 10,
     },
   },
