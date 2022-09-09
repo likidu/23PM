@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onDestroy } from 'svelte';
   import { push } from 'svelte-spa-router';
 
   import View from '../../ui/components/view/View.svelte';
@@ -13,15 +14,57 @@
   import Typography from '../../ui/components/Typography.svelte';
 
   import { IconSize, Priority, RenderState } from '../../ui/enums';
+  import { appMenu, dialog, registerView } from '../../ui/stores';
+  import { Onyx, KeyManager } from '../../ui/services';
 
-  import { IconMenu, IconComment, IconPodcast, IconSubscribeAdd, IconSubscribeRemove } from '../assets/icons';
+  import { IconMenu, IconPodcast, IconSubscribeAdd, IconSubscribeRemove } from '../assets/icons';
 
   import { usePodcast, useEpisodeList } from '../services';
 
   export let params: { pid: string };
 
+  let pid: string;
+
   const podcast = usePodcast(params.pid);
   const episodeList = useEpisodeList(params.pid);
+
+  const keyMan = KeyManager.subscribe(
+    {
+      onSoftRight: () => {
+        if ($podcast.data.subscriptionStatus === 'OFF') {
+          Onyx.dialog.show({
+            title: 'Subscribe Podcast',
+            body: `Do you want to subscribe to ${$podcast.data.title}?`,
+            actions: {
+              left: { label: 'Cancel', fn: () => console.log('Cancel') },
+              right: { label: 'Subscribe', fn: () => console.log('Subscribe') },
+            },
+          });
+        }
+        return true;
+      },
+    },
+    Priority.High,
+  );
+
+  // Ensure podcast data is loaded
+  $: pid = $podcast.data?.pid;
+
+  // Prevent keyManager from working when the episode data is not loaded yet and dialog is opened
+  $: {
+    if (pid && $dialog.state === RenderState.Destroyed) keyMan.enable();
+    else keyMan.disable();
+  }
+
+  // TODO: Do we need this?
+  $: {
+    if ($appMenu.state === RenderState.Destroyed) keyMan.enable();
+    else keyMan.disable();
+  }
+
+  registerView({});
+
+  onDestroy(() => keyMan.unsubscribe());
 </script>
 
 <View>

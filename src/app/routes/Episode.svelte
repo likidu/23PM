@@ -39,7 +39,6 @@
   let eid: string;
 
   const episode = useEpisode(params.eid);
-  $: eid = $episode.data?.eid;
 
   const keyMan = KeyManager.subscribe(
     {
@@ -60,17 +59,14 @@
     Priority.High,
   );
 
+  // Ensure episode data is loaded
+  $: eid = $episode.data?.eid;
+
+  // Prevent keyManager from working when the episode data is not loaded yet
   $: {
     if (eid && $appMenu.state === RenderState.Destroyed) keyMan.enable();
     else keyMan.disable();
   }
-
-  // $: {
-  //   console.log(linkSelected);
-
-  //   if (linkSelected) keyMan.disable();
-  //   else keyMan.enable();
-  // }
 
   registerView({});
 
@@ -123,10 +119,13 @@
           </div>
         </CardContent>
         <CardFooter>
-          <footer class="softkey">
+          <footer class="softkey" style={`color: ${podcastColor}`}>
             <div><Icon size={IconSize.Small} color={podcastColor}><IconMenu /></Icon></div>
-            <div style={`color: ${podcastColor}`}>Play</div>
-            <div><Icon size={IconSize.Small} color={podcastColor}><IconComment /></Icon></div>
+            <div>Play</div>
+            <div class="flex items-center">
+              <Icon size={IconSize.Small} color={podcastColor}><IconComment /></Icon>
+              <span class="text-sm">{episode.commentCount}</span>
+            </div>
           </footer>
         </CardFooter>
       {/if}

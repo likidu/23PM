@@ -1,17 +1,17 @@
 <script lang="ts">
+  import Button from '../../ui/components/buttons/Button.svelte';
   import View from '../../ui/components/view/View.svelte';
   import ViewContent from '../../ui/components/view/ViewContent.svelte';
   import Card from '../../ui/components/card/Card.svelte';
   import CardContent from '../../ui/components/card/CardContent.svelte';
   import CardHeader from '../../ui/components/card/CardHeader.svelte';
   import CardFooter from '../../ui/components/card/CardFooter.svelte';
-  import Icon from '../../ui/components/icon/Icon.svelte';
-  import Typography from '../../ui/components/Typography.svelte';
 
   import { KeyManager } from '../../ui/services';
   import { registerView } from '../../ui/stores';
   import { Priority, RenderState } from '../../ui/enums';
 
+  import Banner from '../components/Banner.svelte';
   import EditorPickList from '../components/EditorPickList.svelte';
   import TopList from '../components/TopList.svelte';
   import { IconDiscover, IconInbox, IconPlayer, IconUser } from '../assets/icons';
@@ -41,8 +41,22 @@
         {:else if $discoveryList.status === 'error'}
           <span class="text-red-500">Error!</span>
         {:else}
-          <EditorPickList editorPick={$discoveryList.data.data[0]} />
-          <TopList top={$discoveryList.data.data[1]} />
+          {#each $discoveryList.data.data as list}
+            {#if list.type === 'DISCOVERY_BANNER'}
+              <Banner content={list} />
+            {:else if list.type === 'EDITOR_PICK'}
+              <EditorPickList editorPick={list} />
+            {:else if list.type === 'TOP_LIST'}
+              <TopList top={list} />
+            {/if}
+          {/each}
+          <Button
+            title="End of list"
+            disabled={true}
+            navi={{
+              itemId: 'endoflist',
+            }}
+          />
         {/if}
       </CardContent>
     </Card>

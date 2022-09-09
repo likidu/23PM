@@ -1,6 +1,21 @@
 import type { Comment } from './Comment';
 import type { Episode } from './Episode';
 
+export type DiscoveryBanner = {
+  type: 'DISCOVERY_BANNER';
+  data: [
+    {
+      id: string;
+      image: string;
+      position: 'TOP' | 'BOTTOM';
+      priority: 5;
+      type: 'EDITORS_PICK_BANNER';
+      url: string;
+      voiceover: string;
+    },
+  ];
+};
+
 export type EditorPickList = {
   type: 'EDITOR_PICK';
   data: {
@@ -27,6 +42,6 @@ export type TopList = {
 };
 
 export type DiscoveryList = {
-  data: [EditorPickList, TopList];
+  data: [DiscoveryBanner, EditorPickList, TopList];
   loadMoreKey: string;
 };
