@@ -1,6 +1,7 @@
 <script lang="ts">
   import { push, replace } from 'svelte-spa-router';
 
+  import Icon from '../../ui/components/icon/Icon.svelte';
   import ListItem from '../../ui/components/list/ListItem.svelte';
   import NavGroup from '../../ui/components/nav/NavGroup.svelte';
   import { IconSize, ViewState } from '../../ui/enums';
@@ -8,11 +9,20 @@
   import { updateView } from '../../ui/stores/view';
   import { getShortcutFromIndex } from '../../ui/utils/getShortcutFromIndex';
 
-  import { menu } from '../stores/user';
+  import { menu, user } from '../stores/user';
+  import { IconCosmos } from '../assets/icons';
 </script>
 
 <NavGroup groupId="app-menu">
-  <div class="header">Cosmos FM</div>
+  <div class="header">
+    <div class="flex items-center">
+      <Icon><IconCosmos /></Icon>
+      <strong class="text-sm">CosmosFM</strong>
+    </div>
+    {#if $user}
+      <img src={$user.avatar.picture.thumbnailUrl} class="rounded-full w-8 h-8" alt="CosmosFM" />
+    {/if}
+  </div>
   <div class="scroller" data-nav-scroller>
     {#each $menu as item, i}
       <ListItem
@@ -38,7 +48,7 @@
   </div>
 </NavGroup>
 
-<style>
+<style lang="postcss">
   :global([data-nav-group-id='app-menu']) {
     border-radius: var(--radius) var(--radius) 0 0;
     background-color: var(--card-color);
@@ -48,10 +58,7 @@
     height: 100%;
   }
   .header {
-    padding: 5px;
-    font-weight: var(--bold-font-weight);
-    color: var(--accent-color);
-    text-align: center;
+    @apply flex items-center justify-between p-4 text-accent;
   }
   .scroller {
     overflow-y: auto;

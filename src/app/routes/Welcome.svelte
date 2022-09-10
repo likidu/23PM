@@ -17,7 +17,7 @@
   import ViewFooter from '../../ui/components/view/ViewFooter.svelte';
   import CardFooter from '../../ui/components/card/CardFooter.svelte';
 
-  import logo from '../assets/svelte.png';
+  import logo from '../assets/cosmos.webp';
   import { user } from '../stores/user';
   import { AuthClient } from '../services';
   import type { AuthError, User } from '../models';
@@ -115,10 +115,11 @@
   <ViewContent>
     {#if params.cardId === $view.cards[0].id}
       <Card cardId={$view.cards[0].id}>
-        <CardHeader title="Cosmos FM" />
+        <CardHeader title="CosmosFM" />
         <CardContent>
           <div class="logo">
-            <img src={logo} alt="Svelte Logo" class="inline-box h-48 w-48" />
+            <h2>小宇宙 App for KaiOS</h2>
+            <img src={logo} alt="Svelte Logo" class="inline-box rounded-full h-48 w-48" />
           </div>
           <Button
             title="Login with SMS"
@@ -171,3 +172,9 @@
   </ViewContent>
   <ViewFooter><Console /></ViewFooter>
 </View>
+
+<style lang="postcss">
+  .logo {
+    @apply flex flex-col items-center justify-center;
+  }
+</style>
