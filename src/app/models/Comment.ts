@@ -1,6 +1,6 @@
 import type { UserBase } from './User';
 
-type CommentUser = UserBase & { relation: 'STRANGE' };
+type CommentUser = UserBase & { relation: 'STRANGE'; ipLoc?: string };
 
 type Owner = {
   id: string;
@@ -19,4 +19,17 @@ export type Comment = {
   liked: boolean;
   createAt: string;
   status: 'NORMAL';
+};
+
+type LoadMoreKey = {
+  direction: 'NEXT';
+  hotSortScore: number;
+  id: string;
+};
+
+export type CommentList = {
+  data: [Comment];
+  loadNextKey: LoadMoreKey;
+  loadMoreKey: LoadMoreKey;
+  totalCount: number;
 };

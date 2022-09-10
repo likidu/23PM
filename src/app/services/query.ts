@@ -1,15 +1,15 @@
 /**
- * svelte-query
+ * Requests that will save to store using svelte-query
  **/
 
-import { useQuery } from '@sveltestack/svelte-query';
-import type { DiscoveryList, Episode, InboxList, EpisodeList, Podcast } from '../models';
-import client from './client';
+import { useQuery, useInfiniteQuery } from '@sveltestack/svelte-query';
+import type { DiscoveryList, Episode, CommentList, InboxList, EpisodeList, Podcast } from '../models';
+import { httpClient } from './httpClient';
 
 // Discovery list
 const discoveryList = async (type?: string): Promise<DiscoveryList> => {
   const request = type ? { returnAll: false, type } : { returnAll: false };
-  const { data } = await client.post('discovery-feed/list', request);
+  const { data } = await httpClient.post('discovery-feed/list', request);
   return data;
 };
 
@@ -18,7 +18,7 @@ export const useDiscoveryList = (type?: string) =>
 
 // Inbox List
 const inboxList = async (limit = 10): Promise<InboxList> => {
-  const { data } = await client.post('/inbox/list', { limit });
+  const { data } = await httpClient.post('/inbox/list', { limit });
   return data;
 };
 
@@ -26,7 +26,7 @@ export const useInboxList = () => useQuery('inbox-list', () => inboxList());
 
 // Individual Episode
 const episode = async (eid: string): Promise<Episode> => {
-  const { data } = await client.get(`/episode/get?eid=${eid}`);
+  const { data } = await httpClient.get(`/episode/get?eid=${eid}`);
   return data.data;
 };
 
@@ -37,7 +37,7 @@ export const useEpisode = (eid: string) =>
 
 // Podcast
 const podcast = async (pid: string): Promise<Podcast> => {
-  const { data } = await client.get(`/podcast/get?pid=${pid}`);
+  const { data } = await httpClient.get(`/podcast/get?pid=${pid}`);
   return data.data;
 };
 
@@ -45,8 +45,27 @@ export const usePodcast = (pid: string) => useQuery(['podcast', pid], () => podc
 
 // Episode List
 const episodeList = async (pid: string, limit = 20): Promise<EpisodeList> => {
-  const { data } = await client.post('/episode/list', { pid, limit });
+  const { data } = await httpClient.post('/episode/list', { pid, limit });
   return data;
 };
 
 export const useEpisodeList = (pid: string) => useQuery('episode-list', () => episodeList(pid));
+
+// Comment list
+const commentList = async (eid: string, pageParam?): Promise<CommentList> => {
+  // TODO: Set right type for request
+  let request: any = { order: 'HOT', owner: { type: 'EPISODE', id: eid } };
+  if (pageParam) request = { loadMoreKey: pageParam, ...request };
+  const { data } = await httpClient.post('/comment/list-primary', request);
+  return data;
+};
+
+export const useCommentList = (eid: string) =>
+  useInfiniteQuery(['comment-list', eid], () => commentList(eid), {
+    getNextPageParam: (lastList) => {
+      console.log(`lastList: ${JSON.stringify(lastList.loadMoreKey)}`);
+
+      return lastList.loadMoreKey ? lastList.loadMoreKey : undefined;
+    },
+    retry: false,
+  });

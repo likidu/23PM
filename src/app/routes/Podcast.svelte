@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onDestroy } from 'svelte';
   import { push } from 'svelte-spa-router';
+  import { useQueryClient } from '@sveltestack/svelte-query';
 
   import View from '../../ui/components/view/View.svelte';
   import ViewContent from '../../ui/components/view/ViewContent.svelte';
@@ -19,7 +20,8 @@
 
   import { IconMenu, IconPodcast, IconSubscribeAdd, IconSubscribeRemove } from '../assets/icons';
 
-  import { usePodcast, useEpisodeList } from '../services';
+  import { Client, usePodcast, useEpisodeList } from '../services';
+  import type { SubscriptionMode } from '../models';
 
   export let params: { pid: string };
 
@@ -27,6 +29,8 @@
 
   const podcast = usePodcast(params.pid);
   const episodeList = useEpisodeList(params.pid);
+
+  const queryClient = useQueryClient();
 
   const keyMan = KeyManager.subscribe(
     {
@@ -37,7 +41,16 @@
             body: `Do you want to subscribe to ${$podcast.data.title}?`,
             actions: {
               left: { label: 'Cancel', fn: () => console.log('Cancel') },
-              right: { label: 'Subscribe', fn: () => console.log('Subscribe') },
+              right: { label: 'Subscribe', fn: () => updateSubscription(pid, 'ON') },
+            },
+          });
+        } else if ($podcast.data.subscriptionStatus === 'ON') {
+          Onyx.dialog.show({
+            title: 'Unsubscribe Podcast',
+            body: `Do you want to unsubscribe to ${$podcast.data.title}?`,
+            actions: {
+              left: { label: 'Cancel', fn: () => console.log('Cancel') },
+              right: { label: 'Unsubscribe', fn: () => updateSubscription(pid, 'OFF') },
             },
           });
         }
@@ -63,6 +76,11 @@
   }
 
   registerView({});
+
+  function updateSubscription(pid: string, mode: SubscriptionMode) {
+    Client.subscriptionUpdate(pid, mode);
+    queryClient.invalidateQueries('podcast');
+  }
 
   onDestroy(() => keyMan.unsubscribe());
 </script>

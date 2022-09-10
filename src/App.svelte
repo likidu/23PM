@@ -6,6 +6,7 @@
   import Discover from './app/routes/Discover.svelte';
   import Inbox from './app/routes/Inbox.svelte';
   import Episode from './app/routes/Episode.svelte';
+  import Comment from './app/routes/Comment.svelte';
   import Podcast from './app/routes/Podcast.svelte';
   import Player from './app/routes/Player.svelte';
   import User from './app/routes/User.svelte';
@@ -28,6 +29,7 @@
     '/inbox': Inbox,
     '/welcome/:cardId': Welcome,
     '/episode/:eid': Episode,
+    '/comment/:eid': Comment,
     '/podcast/:pid': Podcast,
     '/player': Player,
     '/user': User,

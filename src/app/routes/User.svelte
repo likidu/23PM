@@ -18,7 +18,7 @@
   import { IconDiscover, IconInbox, IconPlayer, IconUser } from '../assets/icons';
 
   import { menu } from '../stores/user';
-  import { AuthClient } from '../services';
+  import { Client } from '../services';
 
   registerView({});
 
@@ -33,7 +33,7 @@
     // Stop current playing episode.
     stop();
 
-    AuthClient.logout();
+    Client.logout();
     replace('/');
   }
 </script>

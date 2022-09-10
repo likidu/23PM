@@ -55,6 +55,10 @@
         push('/player');
         return true;
       },
+      onSoftRight: () => {
+        push(`/comment/${eid}`);
+        return true;
+      },
     },
     Priority.High,
   );

@@ -19,7 +19,7 @@
 
   import logo from '../assets/cosmos.webp';
   import { user } from '../stores/user';
-  import { AuthClient } from '../services';
+  import { Client } from '../services';
   import type { AuthError, User } from '../models';
   import Console from '../components/Console.svelte';
 
@@ -73,7 +73,7 @@
     // Reset toast message
     toast = '';
 
-    const result = await AuthClient.sendCode({
+    const result = await Client.sendCode({
       mobilePhoneNumber: mobile,
       areaCode: area,
     });
@@ -90,7 +90,7 @@
     // Reset toast message
     toast = '';
 
-    const result = await AuthClient.loginWithSMS({
+    const result = await Client.loginWithSMS({
       mobilePhoneNumber: mobile,
       areaCode: area,
       verifyCode: code,
