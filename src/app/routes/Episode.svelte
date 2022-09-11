@@ -93,6 +93,7 @@
       {:else}
         {@const episode = $episode.data}
         {@const podcastColor = episode.podcast.color.dark}
+        {@const time = formatSeconds(episode.duration, 'array')}
         <CardHeader title={episode.podcast.title} style={`color: ${podcastColor}`} />
         <CardContent>
           <div class="episode-content">
@@ -114,7 +115,7 @@
             <!-- Wrap below in NavItem just for the focus move away from the podcast link -->
             <NavItem highlight={false} navi={{ itemId: 'episode-section-2' }}>
               <div class="flex space-x-2 text-secondary mb-4">
-                <span>{formatSeconds(episode.duration)}</span>
+                <span>{time[0] ? `${time[0]}hrs` : ''} {`${time[1]}mins`}</span>
                 <span>/</span>
                 <span><Time relative timestamp={episode.pubDate} /></span>
               </div>

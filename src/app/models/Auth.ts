@@ -15,6 +15,11 @@ export type RefreshTokenStorage = {
   refreshToken: string;
 };
 
+export enum PhoneArea {
+  US = '+1',
+  China = '+86',
+}
+
 export type PhoneNumber = {
   mobilePhoneNumber: string;
   areaCode: string;

@@ -12,8 +12,17 @@ import type {
   InboxList,
   EpisodeList,
   Podcast,
+  UserStats,
 } from '../models';
 import { httpClient } from './httpClient';
+
+// User stats
+const userStats = async (uid: string): Promise<UserStats> => {
+  const { data } = await httpClient.get(`/user-stats/get?uid=${uid}`);
+  return data.data;
+};
+
+export const useUserStats = (uid: string) => useQuery('user-stats', () => userStats(uid));
 
 // Discovery list
 const discoveryList = async (type?: string): Promise<DiscoveryList> => {

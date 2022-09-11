@@ -17,3 +17,11 @@ export type User = UserBase & {
   phoneNumber: PhoneNumber;
   debug: boolean;
 };
+
+export type UserStats = {
+  followingCount: number;
+  followerCount: number;
+  subscriptionCount: number;
+  totalPlayedSeconds: number;
+  totalPlaySeconds: number;
+};

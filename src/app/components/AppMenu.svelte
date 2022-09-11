@@ -4,7 +4,7 @@
   import Icon from '../../ui/components/icon/Icon.svelte';
   import ListItem from '../../ui/components/list/ListItem.svelte';
   import NavGroup from '../../ui/components/nav/NavGroup.svelte';
-  import { IconSize, ViewState } from '../../ui/enums';
+  import { Alignment, IconSize, ViewState } from '../../ui/enums';
   import { Onyx } from '../../ui/services';
   import { updateView } from '../../ui/stores/view';
   import { getShortcutFromIndex } from '../../ui/utils/getShortcutFromIndex';
@@ -27,6 +27,7 @@
     {#each $menu as item, i}
       <ListItem
         icon={item.icon}
+        align={Alignment.Middle}
         imageSize={IconSize.Small}
         primaryText={item.text}
         navi={{

@@ -45,15 +45,15 @@
           <span class="text-red-500">Error!</span>
         {:else}
           <ListHeader title={`${$comments.data.pages[0].totalCount.toString()} comments total`} />
-          {#each $comments.data.pages as page}
-            {#each page.data as comment, i}
+          {#each $comments.data.pages as page, i}
+            {#each page.data as comment, j}
               <ListItem
                 imageUrl={comment.author.avatar.picture.thumbnailUrl}
                 imageStyle="circle"
                 imageSize={IconSize.Small}
                 primaryText={comment.author.nickname}
                 secondaryText={dayjs().to(comment.createdAt)}
-                navi={{ itemId: `${i + 1}` }}
+                navi={{ itemId: `${comment.type}_${i + 1}_${j + 1}` }}
               >
                 <div slot="bottom" class="comment-content">
                   <section class="line-clamp-4">{@html comment.text}</section>

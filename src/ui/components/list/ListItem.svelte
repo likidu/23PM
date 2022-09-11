@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { SvelteComponent } from 'svelte';
   import MdMoreVert from 'svelte-icons/md/MdMoreVert.svelte';
-  import { Color, IconSize } from '../../enums';
+  import { Alignment, Color, IconSize } from '../../enums';
   import type { ContextMenu, Navigation } from '../../models';
   import { settings } from '../../stores';
   import Icon from '../icon/Icon.svelte';
@@ -12,6 +12,7 @@
   export let imageSize: IconSize = IconSize.Medium;
   export let icon: typeof SvelteComponent = null;
   export let iconColor: Color = Color.Primary;
+  export let align: Alignment = Alignment.Left;
   export let primaryText: string = null;
   export let secondaryText: string = null;
   export let accentText: string = null;
@@ -20,7 +21,7 @@
 </script>
 
 <NavItem {navi} {contextMenu}>
-  <div class="root">
+  <div class="root" style={`align-items: ${align}`}>
     {#if $settings.shortcutKeyLocation === 'left' && navi.shortcutKey}
       <div class="shortcut">{navi.shortcutKey}</div>
     {/if}
@@ -59,11 +60,10 @@
   </div>
 </NavItem>
 
-<style>
+<style lang="postcss">
   .root {
     padding: 7px;
     display: flex;
-    align-items: flex-start;
     border-bottom: 1px solid var(--divider-color);
   }
 
@@ -74,6 +74,7 @@
   .image {
     height: 30px;
     width: 30px;
+    margin-top: 4px;
     margin-right: 10px;
     border-radius: 3px;
   }

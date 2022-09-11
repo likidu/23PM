@@ -4,6 +4,12 @@ import type { MenuItem, RefreshTokenStorage, User } from '../models';
 
 export const menu = writable<MenuItem[]>([]);
 
+/**
+ * @summary Create store for user and tokens and save them to LocalStorage
+ * @param key
+ * @param initStore
+ * @returns Store<T>
+ */
 function createStore<T>(key: 'user' | 'auth', initStore: T) {
   const { subscribe, update, set } = writable<T>(initStore);
 

@@ -5,6 +5,8 @@
 :root {
   /* Uesr defined */
   --svelte-rgb: 255, 62, 0;
+  /* From Tailwindcss red-600 */
+  --error-color: #dc2626;
 
   --card-color-h: 210;
   --card-color-s: 13%;
@@ -117,6 +119,11 @@ h1 {
   font-size: 1.8rem;
 }
 
+h2 {
+  font-size: 1.6rem;
+  font-weight: var(--bold-font-weight);
+}
+
 input {
   border: none;
   outline: none;
@@ -126,15 +133,12 @@ input {
 .softkey {
   @apply flex items-center;
 }
-
 .softkey > div:first-child {
   @apply flex justify-start w-full;
 }
-
 .softkey > div:nth-child(2) {
   @apply flex justify-center font-bold text-center uppercase mx-auto;
 }
-
 .softkey > div:last-child {
   @apply flex justify-end w-full;
 }
@@ -147,11 +151,9 @@ input {
 .player-content {
   @apply flex flex-col items-center px-4;
 }
-
 .player-content > img {
   @apply rounded-md drop-shadow-xl;
 }
-
 .player-controller {
   @apply flex justify-center items-center space-x-6;
 }
@@ -160,11 +162,35 @@ input {
 .comment-content {
   @apply my-2;
 }
-
 .comment-reply {
   @apply p-2;
 }
 
 .comment-reply > div > span{
   @apply inline text-sm;
+}
+
+/* Route: User */
+.user-stats {
+  @apply px-3
+}
+
+.user-stats-header {
+  @apply flex justify-between ;
+}
+.user-stats-header figure h2 {
+  @apply inline text-accent m-0;
+}
+.user-stats-header figure span {
+  @apply inline text-sm text-secondary;
+}
+
+.user-stats-numbers {
+  @apply flex justify-between space-x-2 mt-3;
+}
+.user-stats-numbers h2 {
+  @apply m-0;
+}
+.user-stats-numbers figcaption {
+  @apply text-sm text-secondary;
 }

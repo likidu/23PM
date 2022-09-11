@@ -1,16 +1,18 @@
 <script lang="ts">
-  import { onDestroy } from 'svelte';
+  import { onMount, onDestroy } from 'svelte';
   import { replace } from 'svelte-spa-router';
 
-  import { KeyManager } from '../../ui/services';
+  import { Onyx, KeyManager } from '../../ui/services';
   import { registerView, updateView, view } from '../../ui/stores';
   import { DataStatus, Priority } from '../../ui/enums';
+  import { delay } from '../../ui/utils';
 
   import Button from '../../ui/components/buttons/Button.svelte';
   import Card from '../../ui/components/card/Card.svelte';
   import CardContent from '../../ui/components/card/CardContent.svelte';
   import CardHeader from '../../ui/components/card/CardHeader.svelte';
   import InputRow from '../../ui/components/form/InputRow.svelte';
+  import SelectRow from '../../ui/components/form/SelectRow.svelte';
   import Typography from '../../ui/components/Typography.svelte';
   import View from '../../ui/components/view/View.svelte';
   import ViewContent from '../../ui/components/view/ViewContent.svelte';
@@ -20,7 +22,9 @@
   import logo from '../assets/cosmos.webp';
   import { user } from '../stores/user';
   import { Client } from '../services';
+  import { PhoneArea } from '../models';
   import type { AuthError, User } from '../models';
+
   import Console from '../components/Console.svelte';
 
   export let params: { cardId: string };
@@ -29,15 +33,22 @@
   let mobile = '2067711184';
   let code = '';
   let toast = '';
+  let resend;
+
+  // Wait for x second before resend verification code
+  const second = 1000;
+  const resendWait = 30;
+  let counter = resendWait;
 
   const keyMan = KeyManager.subscribe(
     {
       onSoftLeft: () => {
         if (params.cardId === 'sms') {
           replace('/welcome/splash');
-        } else if (params.cardId === 'login') {
-          replace('/welcome/splash');
         }
+        return true;
+      },
+      onSoftRight: () => {
         return true;
       },
     },
@@ -81,8 +92,16 @@
     // sendCode returns 200 response, and data: {}
     if (Object.keys(result).length === 0) {
       replace('/welcome/login');
+
+      // Update resend button text
+      resendCountDown();
+      await delay(resendWait * second);
+      // Update resend button status and text
+      resend.disabled = false;
+      resend.title = 'Resend';
     } else {
       toast = (result as AuthError).toast;
+      Onyx.toaster.show({ type: 'error', title: toast });
     }
   }
 
@@ -102,12 +121,21 @@
       replace('/');
     } else {
       toast = (result as AuthError).toast;
+      Onyx.toaster.show({ type: 'error', title: toast });
     }
   }
 
-  // onMount(async () => {
-  //   updateView({ dataStatus: DataStatus.Loaded });
-  // });
+  function resendCountDown() {
+    if (counter > 0) {
+      counter--;
+      setTimeout(resendCountDown, second);
+    }
+  }
+
+  onMount(async () => {
+    // updateView({ dataStatus: DataStatus.Loaded });
+  });
+
   onDestroy(() => keyMan.unsubscribe());
 </script>
 
@@ -124,7 +152,7 @@
           <Button
             title="Login with SMS"
             navi={{
-              itemId: 'splash',
+              itemId: 'BUTTON_START',
               onSelect: async () => splash(),
             }}
           />
@@ -135,17 +163,23 @@
         <CardHeader title="Login" />
         <CardContent>
           <Typography align="center" padding="both">Enter your mobile phone</Typography>
+          <SelectRow
+            label="Area"
+            value={area}
+            options={[
+              { id: PhoneArea.US, label: 'US' },
+              { id: PhoneArea.China, label: 'China' },
+            ]}
+            onChange={(val) => (area = val.toString())}
+          />
           <InputRow label="Mobile" value={mobile} placeholder="Mobile number..." onChange={(val) => (mobile = val)} />
           <Button
             title="Send Code"
             navi={{
-              itemId: 'sms',
+              itemId: 'BUTTON_SEND',
               onSelect: async () => sendSMS(),
             }}
           />
-          {#if toast !== ''}
-            <p class="text-red-500">{toast}</p>
-          {/if}
         </CardContent>
         <CardFooter><p>Back</p></CardFooter>
       </Card>
@@ -158,15 +192,20 @@
           <Button
             title="Login"
             navi={{
-              itemId: 'login',
+              itemId: 'BUTTON_LOGIN',
               onSelect: async () => login(),
             }}
           />
-          {#if toast !== '' && !$user}
-            <p class="text-red-500">{toast}</p>
-          {/if}
+          <Button
+            title={`Wait ${counter} sec to resend`}
+            disabled={true}
+            navi={{
+              itemId: 'BUTTON_RESEND',
+              onSelect: async () => replace('/welcome/sms'),
+            }}
+            bind:this={resend}
+          />
         </CardContent>
-        <CardFooter><p>Back</p></CardFooter>
       </Card>
     {/if}
   </ViewContent>

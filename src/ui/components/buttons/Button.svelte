@@ -1,3 +1,5 @@
+<svelte:options accessors />
+
 <script lang="ts">
   import type { SvelteComponent } from 'svelte';
   import { Alignment, Color, IconSize } from '../../enums';
