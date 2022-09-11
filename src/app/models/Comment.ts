@@ -7,7 +7,7 @@ type Owner = {
   type: 'EPISODE';
 };
 
-export type Comment = {
+type CommentBase = {
   id: string;
   type: 'COMMENT';
   owner: Owner;
@@ -17,19 +17,29 @@ export type Comment = {
   level: number;
   likeCount: number;
   liked: boolean;
-  createAt: string;
+  createdAt: string;
   status: 'NORMAL';
 };
 
-type LoadMoreKey = {
+export type Comment = CommentBase & {
+  replies: CommentBase[];
+};
+
+export type CommentLoadMoreKey = {
   direction: 'NEXT';
   hotSortScore: number;
   id: string;
 };
 
+export type CommentListRequest = {
+  order: 'HOT';
+  owner: Owner;
+  loadMoreKey?: CommentLoadMoreKey;
+};
+
 export type CommentList = {
-  data: [Comment];
-  loadNextKey: LoadMoreKey;
-  loadMoreKey: LoadMoreKey;
+  data: Comment[];
+  loadNextKey: CommentLoadMoreKey;
+  loadMoreKey: CommentLoadMoreKey;
   totalCount: number;
 };

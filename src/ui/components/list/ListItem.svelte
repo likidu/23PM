@@ -63,7 +63,7 @@
   .root {
     padding: 7px;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     border-bottom: 1px solid var(--divider-color);
   }
 

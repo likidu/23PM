@@ -128,29 +128,43 @@ input {
 }
 
 .softkey > div:first-child {
-  @apply flex justify-start w-full
+  @apply flex justify-start w-full;
 }
 
 .softkey > div:nth-child(2) {
-  @apply flex justify-center font-bold text-center uppercase mx-auto
+  @apply flex justify-center font-bold text-center uppercase mx-auto;
 }
 
 .softkey > div:last-child {
-  @apply flex justify-end w-full
+  @apply flex justify-end w-full;
 }
 
 .episode-content {
-  @apply px-2
+  @apply px-2;
 }
 
+/* Route: Player */
 .player-content {
   @apply flex flex-col items-center px-4;
 }
 
 .player-content > img {
-  @apply rounded-md drop-shadow-xl
+  @apply rounded-md drop-shadow-xl;
 }
 
 .player-controller {
   @apply flex justify-center items-center space-x-6;
+}
+
+/* Route: Comment */
+.comment-content {
+  @apply my-2;
+}
+
+.comment-reply {
+  @apply p-2;
+}
+
+.comment-reply > div > span{
+  @apply inline text-sm;
 }

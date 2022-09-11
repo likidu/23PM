@@ -1,9 +1,9 @@
 <script context="module" lang="ts">
-  import 'dayjs/esm/locale/zh-cn';
+  import 'dayjs/esm/locale/zh';
   import dayjs from 'dayjs/esm';
 
   // Day.js use Chinese locale
-  dayjs.locale('zh-cn');
+  dayjs.locale('zh');
 </script>
 
 <script lang="ts">

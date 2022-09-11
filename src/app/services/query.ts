@@ -3,7 +3,16 @@
  **/
 
 import { useQuery, useInfiniteQuery } from '@sveltestack/svelte-query';
-import type { DiscoveryList, Episode, CommentList, InboxList, EpisodeList, Podcast } from '../models';
+import type {
+  DiscoveryList,
+  Episode,
+  CommentListRequest,
+  CommentLoadMoreKey,
+  CommentList,
+  InboxList,
+  EpisodeList,
+  Podcast,
+} from '../models';
 import { httpClient } from './httpClient';
 
 // Discovery list
@@ -13,8 +22,7 @@ const discoveryList = async (type?: string): Promise<DiscoveryList> => {
   return data;
 };
 
-export const useDiscoveryList = (type?: string) =>
-  useQuery<DiscoveryList>(['discovery', type], () => discoveryList(type));
+export const useDiscoveryList = (type?: string) => useQuery(['discovery', type], () => discoveryList(type));
 
 // Inbox List
 const inboxList = async (limit = 10): Promise<InboxList> => {
@@ -52,19 +60,18 @@ const episodeList = async (pid: string, limit = 20): Promise<EpisodeList> => {
 export const useEpisodeList = (pid: string) => useQuery('episode-list', () => episodeList(pid));
 
 // Comment list
-const commentList = async (eid: string, pageParam?): Promise<CommentList> => {
-  // TODO: Set right type for request
-  let request: any = { order: 'HOT', owner: { type: 'EPISODE', id: eid } };
+const commentList = async (eid: string, pageParam: CommentLoadMoreKey): Promise<CommentList> => {
+  let request: CommentListRequest = { order: 'HOT', owner: { type: 'EPISODE', id: eid } };
   if (pageParam) request = { loadMoreKey: pageParam, ...request };
+
   const { data } = await httpClient.post('/comment/list-primary', request);
   return data;
 };
 
+// {querykey, pageParam} are what pass to the queryFn
 export const useCommentList = (eid: string) =>
-  useInfiniteQuery(['comment-list', eid], () => commentList(eid), {
+  useInfiniteQuery(['comment-list', eid], ({ pageParam }) => commentList(eid, pageParam), {
     getNextPageParam: (lastList) => {
-      console.log(`lastList: ${JSON.stringify(lastList.loadMoreKey)}`);
-
       return lastList.loadMoreKey ? lastList.loadMoreKey : undefined;
     },
     retry: false,

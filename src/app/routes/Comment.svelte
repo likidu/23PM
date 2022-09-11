@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { dayjs } from 'svelte-time';
   import Button from '../../ui/components/buttons/Button.svelte';
   import View from '../../ui/components/view/View.svelte';
   import ViewContent from '../../ui/components/view/ViewContent.svelte';
@@ -6,6 +7,7 @@
   import CardContent from '../../ui/components/card/CardContent.svelte';
   import CardHeader from '../../ui/components/card/CardHeader.svelte';
   import CardFooter from '../../ui/components/card/CardFooter.svelte';
+  import ListHeader from '../../ui/components/list/ListHeader.svelte';
   import ListItem from '../../ui/components/list/ListItem.svelte';
   import Icon from '../../ui/components/icon/Icon.svelte';
   import Typography from '../../ui/components/Typography.svelte';
@@ -13,13 +15,13 @@
   import { KeyManager } from '../../ui/services';
   import { IconSize, Priority, RenderState } from '../../ui/enums';
 
-  import { IconMenu, IconComment } from '../assets/icons';
+  import { IconMenu, IconInfo } from '../assets/icons';
 
   import { useCommentList } from '../services';
 
   export let params: { eid: string };
 
-  let load = 'End of list';
+  let load: string;
 
   const comments = useCommentList(params.eid);
 
@@ -27,6 +29,8 @@
     load = 'Loading more...';
   } else if ($comments.hasNextPage) {
     load = 'Load more';
+  } else {
+    load = 'End of list';
   }
 </script>
 
@@ -40,10 +44,30 @@
         {:else if $comments.status === 'error'}
           <span class="text-red-500">Error!</span>
         {:else}
+          <ListHeader title={`${$comments.data.pages[0].totalCount.toString()} comments total`} />
           {#each $comments.data.pages as page}
             {#each page.data as comment, i}
-              <ListItem primaryText={comment.author.nickname} navi={{ itemId: `${i + 1}` }}>
-                <div slot="bottom" class="comment-reply">Reply</div>
+              <ListItem
+                imageUrl={comment.author.avatar.picture.thumbnailUrl}
+                imageStyle="circle"
+                imageSize={IconSize.Small}
+                primaryText={comment.author.nickname}
+                secondaryText={dayjs().to(comment.createdAt)}
+                navi={{ itemId: `${i + 1}` }}
+              >
+                <div slot="bottom" class="comment-content">
+                  <section class="line-clamp-4">{@html comment.text}</section>
+                  {#if comment.replies.length > 0}
+                    <div class="comment-reply">
+                      {#each comment.replies as reply}
+                        <div>
+                          <span class="text-secondary">{reply.author.nickname}&#58; </span>
+                          <span class="line-clamp-2">{reply.text}</span>
+                        </div>
+                      {/each}
+                    </div>
+                  {/if}
+                </div>
               </ListItem>
             {/each}
           {/each}
@@ -63,7 +87,7 @@
         <footer class="softkey">
           <div><Icon size={IconSize.Small}><IconMenu /></Icon></div>
           <div>
-            <Icon size={IconSize.Small}><IconComment /></Icon>
+            <Icon size={IconSize.Small}><IconInfo /></Icon>
           </div>
         </footer>
       </CardFooter>
