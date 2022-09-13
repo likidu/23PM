@@ -38,7 +38,6 @@
   // Wait for x second before resend verification code
   const second = 1000;
   const resendWait = 30;
-  let counter = resendWait;
 
   const keyMan = KeyManager.subscribe(
     {
@@ -94,7 +93,7 @@
       replace('/welcome/login');
 
       // Update resend button text
-      resendCountDown();
+      resendCountDown(resendWait);
       await delay(resendWait * second);
       // Update resend button status and text
       resend.disabled = false;
@@ -125,7 +124,8 @@
     }
   }
 
-  function resendCountDown() {
+  function resendCountDown(wait: number) {
+    let counter = wait;
     if (counter > 0) {
       counter--;
       setTimeout(resendCountDown, second);
