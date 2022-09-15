@@ -4,16 +4,9 @@
 import { httpClient, clientHandleError } from './httpClient';
 
 import { user, tokens } from '../stores/user';
+import { player } from '../stores/player';
 
-import type {
-  LoginWithSMS,
-  AuthError,
-  PhoneNumber,
-  User,
-  RefreshToken,
-  SubscriptionUpdateRequest,
-  SubscriptionMode,
-} from '../models';
+import type { LoginWithSMS, AuthError, PhoneNumber, User, RefreshToken, SubscriptionMode } from '../models';
 
 export class Client {
   static async sendCode(mobile: PhoneNumber): Promise<{} | AuthError> {
@@ -52,6 +45,7 @@ export class Client {
   static logout() {
     user.reset();
     tokens.reset();
+    player.reset();
   }
 
   /**
@@ -60,7 +54,7 @@ export class Client {
    * @param mode 'ON' or 'OFF
    * @return boolean
    */
-  static async subscriptionUpdate(pid: string, mode: SubscriptionMode): Promise<boolean> {
+  static async updateSubscription(pid: string, mode: SubscriptionMode): Promise<boolean> {
     try {
       const { data } = await httpClient.post('/subscription/update', {
         currentPageName: 9,

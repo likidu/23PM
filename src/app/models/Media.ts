@@ -1,6 +1,6 @@
 export type Media = {
   eid: string;
   duration: number;
-  current: number;
+  progress: number;
   playing: boolean;
 };

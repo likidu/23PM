@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
+  import type { SvelteComponent } from 'svelte';
   import { replace } from 'svelte-spa-router';
 
   import { Onyx, KeyManager } from '../../ui/services';
@@ -33,11 +34,12 @@
   let mobile = '2067711184';
   let code = '';
   let toast = '';
-  let resend;
+  let resend: SvelteComponent;
+  let counter: number;
 
   // Wait for x second before resend verification code
   const second = 1000;
-  const resendWait = 30;
+  const wait = 30;
 
   const keyMan = KeyManager.subscribe(
     {
@@ -80,7 +82,7 @@
   }
 
   async function sendSMS() {
-    // Reset toast message
+    // Reset
     toast = '';
 
     const result = await Client.sendCode({
@@ -93,8 +95,9 @@
       replace('/welcome/login');
 
       // Update resend button text
-      resendCountDown(resendWait);
-      await delay(resendWait * second);
+      counter = wait;
+      resendCountDown();
+      await delay(wait * second);
       // Update resend button status and text
       resend.disabled = false;
       resend.title = 'Resend';
@@ -105,7 +108,7 @@
   }
 
   async function login() {
-    // Reset toast message
+    // Reset
     toast = '';
 
     const result = await Client.loginWithSMS({
@@ -124,8 +127,7 @@
     }
   }
 
-  function resendCountDown(wait: number) {
-    let counter = wait;
+  function resendCountDown() {
     if (counter > 0) {
       counter--;
       setTimeout(resendCountDown, second);

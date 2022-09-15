@@ -78,7 +78,7 @@
   registerView({});
 
   function updateSubscription(pid: string, mode: SubscriptionMode) {
-    Client.subscriptionUpdate(pid, mode);
+    Client.updateSubscription(pid, mode);
     queryClient.invalidateQueries('podcast');
   }
 

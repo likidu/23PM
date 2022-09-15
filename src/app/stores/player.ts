@@ -1,17 +1,22 @@
 import { writable } from 'svelte/store';
-
+import { Storage } from '../../ui/services';
 import type { Media } from '../models';
 
 // Default values for player store
-export const DEFAULT_MEDIA = {
+const DEFAULT_MEDIA: Media = {
   eid: undefined,
   duration: 0,
-  current: 0,
+  progress: 0,
   playing: false,
 };
 
-function createPlayer() {
-  const { subscribe, update, set } = writable<Media>(DEFAULT_MEDIA);
+function createPlayer(key: 'media', initStore: Media) {
+  const { subscribe, update, set } = writable<Media>(initStore);
+
+  subscribe((val: Partial<Media>) => {
+    // Only update LocalStorage when the audio is paused
+    if (!val.playing) Storage.set(key, val);
+  });
 
   return {
     subscribe,
@@ -24,4 +29,8 @@ function createPlayer() {
   };
 }
 
-export const player = createPlayer();
+const storedMedia = Storage.get<Media>('media');
+let initStore = DEFAULT_MEDIA;
+if (storedMedia) initStore = storedMedia;
+
+export const player = createPlayer('media', initStore);
