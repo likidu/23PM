@@ -38,7 +38,7 @@
     stop();
 
     Client.logout();
-    replace('/');
+    replace('#/');
   }
 </script>
 

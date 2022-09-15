@@ -16,7 +16,7 @@
   import { appMenu } from '../../ui/stores';
   import { IconSize, Priority, RenderState } from '../../ui/enums';
 
-  import { pause, play, skip, skipTo } from '../components/Audio.svelte';
+  import { reload, pause, play, skip, skipTo, src } from '../components/Audio.svelte';
   import { IconDiscover, IconPlay, IconPause, IconBackward, IconForward } from '../assets/icons';
 
   import { menu } from '../stores/user';
@@ -24,6 +24,7 @@
   import { useEpisode } from '../services';
   import { formatSeconds } from '../helper';
 
+  let eid: string;
   let progress = 0;
 
   const imageSize = 144;
@@ -51,7 +52,7 @@
         return true;
       },
       onArrowRightLong: () => {
-        skipTo($player.duration - 5);
+        skipTo($player.duration - 10);
         return true;
       },
       onArrowUp: () => {
@@ -66,10 +67,18 @@
     Priority.High,
   );
 
-  // Set progress bar percent and reserve 43 fraction values (100,000 / 100).
-  $: progress = Math.round(($player.current / $player.duration) * 100000) / 1000;
-
   $menu = [{ id: 'discover', text: 'Discover', route: '#/', icon: IconDiscover }];
+
+  // Ensure episode data is loaded
+  $: eid = $episode.data?.eid;
+
+  $: if (eid && src() === '') {
+    // Load this episode.
+    reload($episode.data.mediaKey, $player.progress);
+  }
+
+  // Set progress bar percent and reserve 43 fraction values (100,000 / 100).
+  $: progress = Math.round(($player.progress / $player.duration) * 100000) / 1000;
 
   $: {
     if ($player.eid && $appMenu.state === RenderState.Destroyed) keyMan.enable();
@@ -109,8 +118,8 @@
           </CardContent>
           <CardFooter>
             <div id="time-tracker" class="flex justify-between">
-              <span class="text-sm">{formatSeconds($player.current)}</span>
-              <span class="text-sm">{formatSeconds($player.duration - $player.current)}</span>
+              <span class="text-sm">{formatSeconds($player.progress)}</span>
+              <span class="text-sm">{formatSeconds($player.duration - $player.progress)}</span>
             </div>
             <Progressbar value={progress} />
             <div class="player-controller">
