@@ -38,7 +38,7 @@
     stop();
 
     Client.logout();
-    replace('#/');
+    replace('/');
   }
 </script>
 
@@ -53,35 +53,37 @@
           <Typography align="center">Error!</Typography>
         {:else}
           {@const time = formatSeconds($userStats.data.totalPlayedSeconds, 'array')}
-          <div class="user-stats">
-            <section class="user-stats-header">
-              <div>
-                <h2>{$user.nickname}</h2>
+          {#if $user}
+            <div class="user-stats">
+              <section class="user-stats-header">
+                <div>
+                  <h2>{$user.nickname}</h2>
+                  <figure>
+                    <h2>{time[0]}</h2>
+                    <span>hrs</span>
+                    <h2>{time[1]}</h2>
+                    <span>mins</span>
+                    <span>played</span>
+                  </figure>
+                </div>
+                <img src={$user.avatar.picture.smallPicUrl} class="rounded-full w-24 h-24" alt="Avatar" />
+              </section>
+              <section class="user-stats-numbers">
                 <figure>
-                  <h2>{time[0]}</h2>
-                  <span>hrs</span>
-                  <h2>{time[1]}</h2>
-                  <span>mins</span>
-                  <span>played</span>
+                  <h2>{$userStats.data.subscriptionCount}</h2>
+                  <figcaption>Subscriptions</figcaption>
                 </figure>
-              </div>
-              <img src={$user.avatar.picture.smallPicUrl} class="rounded-full w-24 h-24" alt="Avatar" />
-            </section>
-            <section class="user-stats-numbers">
-              <figure>
-                <h2>{$userStats.data.subscriptionCount}</h2>
-                <figcaption>Subscriptions</figcaption>
-              </figure>
-              <figure>
-                <h2>{$userStats.data.followingCount}</h2>
-                <figcaption>Followings</figcaption>
-              </figure>
-              <figure>
-                <h2>{$userStats.data.followerCount}</h2>
-                <figcaption>Followers</figcaption>
-              </figure>
-            </section>
-          </div>
+                <figure>
+                  <h2>{$userStats.data.followingCount}</h2>
+                  <figcaption>Followings</figcaption>
+                </figure>
+                <figure>
+                  <h2>{$userStats.data.followerCount}</h2>
+                  <figcaption>Followers</figcaption>
+                </figure>
+              </section>
+            </div>
+          {/if}
         {/if}
       </CardContent>
       <CardFooter>

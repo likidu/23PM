@@ -60,9 +60,9 @@
                   {#if comment.replies.length > 0}
                     <div class="comment-reply">
                       {#each comment.replies as reply}
-                        <div>
+                        <div class="line-clamp-3">
                           <span class="text-secondary">{reply.author.nickname}&#58; </span>
-                          <span class="line-clamp-2">{reply.text}</span>
+                          <span>{reply.text}</span>
                         </div>
                       {/each}
                     </div>

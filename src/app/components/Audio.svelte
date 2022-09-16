@@ -10,9 +10,13 @@
 
   audio.onloadedmetadata = () => {};
 
+  audio.onloadeddata = () => {};
+
   audio.ontimeupdate = () => {
     player.update({ progress: audio.currentTime });
   };
+
+  audio.onended = () => stop();
 
   export function load(eid: string, mediaKey: string, duration: number) {
     audio.src = mediaKey;
@@ -31,11 +35,8 @@
   }
 
   export function play() {
-    // Data is available for the current playback position
-    if (audio.readyState >= 2) {
-      audio.play();
-      player.update({ playing: true });
-    }
+    audio.play();
+    player.update({ playing: true });
   }
 
   export function pause() {
