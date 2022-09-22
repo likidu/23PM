@@ -135,7 +135,7 @@
   }
 
   onMount(async () => {
-    // updateView({ dataStatus: DataStatus.Loaded });
+    updateView({ dataStatus: DataStatus.Loaded });
   });
 
   onDestroy(() => keyMan.unsubscribe());
@@ -177,6 +177,7 @@
           <InputRow label="Mobile" value={mobile} placeholder="Mobile number..." onChange={(val) => (mobile = val)} />
           <Button
             title="Send Code"
+            disabled={!!(mobile === '')}
             navi={{
               itemId: 'BUTTON_SEND',
               onSelect: async () => sendSMS(),
@@ -193,6 +194,7 @@
           <InputRow label="Verify code" value={code} placeholder="Verify code..." onChange={(val) => (code = val)} />
           <Button
             title="Login"
+            disabled={!!(code === '')}
             navi={{
               itemId: 'BUTTON_LOGIN',
               onSelect: async () => login(),

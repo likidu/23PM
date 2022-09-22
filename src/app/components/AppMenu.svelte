@@ -10,7 +10,15 @@
   import { getShortcutFromIndex } from '../../ui/utils/getShortcutFromIndex';
 
   import { menu, user } from '../stores/user';
-  import { IconCosmos } from '../assets/icons';
+  import { IconCosmos, IconDiscover, IconInbox, IconPlayer, IconSearch, IconUser } from '../assets/icons';
+
+  $menu = [
+    { id: 'discover', text: 'Discover', route: '#/', icon: IconDiscover },
+    { id: 'inbox', text: 'Inbox', route: '/inbox', icon: IconInbox },
+    { id: 'search', text: 'Search', route: '/search', icon: IconSearch },
+    { id: 'player', text: 'Player', route: '/player', icon: IconPlayer },
+    { id: 'user', text: 'User', route: '/user', icon: IconUser },
+  ];
 </script>
 
 <NavGroup groupId="app-menu">

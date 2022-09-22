@@ -11,27 +11,17 @@
   import Icon from '../../ui/components/icon/Icon.svelte';
   import Typography from '../../ui/components/Typography.svelte';
 
-  import { KeyManager } from '../../ui/services';
   import { registerView } from '../../ui/stores';
-  import { Priority, RenderState } from '../../ui/enums';
 
   import { stop } from '../components/Audio.svelte';
-  import { IconDiscover, IconInbox, IconPlayer, IconUser } from '../assets/icons';
 
-  import { menu, user } from '../stores/user';
+  import { user } from '../stores/user';
   import { Client, useUserStats } from '../services';
   import { formatSeconds } from '../helper';
 
   const userStats = useUserStats($user.uid);
 
   registerView({});
-
-  $menu = [
-    { id: 'discover', text: 'Discover', route: '#/', icon: IconDiscover },
-    { id: 'inbox', text: 'Inbox', route: '/inbox', icon: IconInbox },
-    { id: 'player', text: 'Player', route: '/player', icon: IconPlayer },
-    { id: 'user', text: 'User', route: '/user', icon: IconUser },
-  ];
 
   function logout() {
     // Stop current playing episode.

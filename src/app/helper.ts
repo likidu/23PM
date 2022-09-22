@@ -37,3 +37,5 @@ export function formatSeconds(seconds: number, format: 'whole' | 'array' = 'whol
 export function clamp(num: number, min: number, max: number): number {
   return Math.min(Math.max(num, min), max);
 }
+
+export const placeholderImage = 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=';

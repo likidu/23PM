@@ -12,6 +12,8 @@ import type {
   InboxList,
   EpisodeList,
   Podcast,
+  SearchPreset,
+  SearchResultList,
   UserStats,
 } from '../models';
 import { httpClient } from './httpClient';
@@ -27,7 +29,7 @@ export const useUserStats = (uid: string) => useQuery('user-stats', () => userSt
 // Discovery list
 const discoveryList = async (type?: string): Promise<DiscoveryList> => {
   const request = type ? { returnAll: false, type } : { returnAll: false };
-  const { data } = await httpClient.post('discovery-feed/list', request);
+  const { data } = await httpClient.post('/discovery-feed/list', request);
   return data;
 };
 
@@ -85,3 +87,20 @@ export const useCommentList = (eid: string) =>
     },
     retry: false,
   });
+
+// Search Suggestions
+const searchPreset = async (): Promise<SearchPreset[]> => {
+  const { data } = await httpClient.get('/search/get-preset');
+  return data.data;
+};
+
+export const useSearchPreset = () => useQuery('search-preset', () => searchPreset());
+
+// Search
+const searchResultList = async (keyword: string): Promise<SearchResultList> => {
+  const request = { keyword, limit: 20, type: 'ALL' };
+  const { data } = await httpClient.post('search/create', request);
+  return data;
+};
+
+export const useSearchResultList = (keyword: string) => useQuery('search-result', () => searchResultList(keyword));

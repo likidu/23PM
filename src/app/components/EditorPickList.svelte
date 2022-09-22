@@ -6,9 +6,9 @@
 
   import type { EditorPickList } from '../models';
 
-  export let editorPick: EditorPickList;
+  export let list: EditorPickList;
 
-  const { data } = editorPick;
+  const { data } = list;
 </script>
 
 <ListHeader title={data.date} />
@@ -20,7 +20,9 @@
     navi={{ itemId: `EDITOR_PICK_${i + 1}`, onSelect: () => push(`/episode/${pick.episode.eid}`) }}
   >
     <div slot="bottom" class="comment">
-      <p class="line-clamp-3 text-lg"><strong>{pick.comment.author.nickname}: </strong>{pick.comment.text}</p>
+      <p class="line-clamp-3 text-lg pl-2 border-l border-divider">
+        <strong>{pick.comment.author.nickname}: </strong>{pick.comment.text}
+      </p>
     </div>
   </ListItem>
 {/each}

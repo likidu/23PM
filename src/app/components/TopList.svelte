@@ -6,10 +6,10 @@
 
   import type { TopList } from '../models';
 
-  export let top: TopList;
+  export let list: TopList;
 
-  const { data } = top;
-  // Only use the first two list: Hot and Skyrocket
+  const { data } = list;
+  // Only use first two lists: Hot and Skyrocket
   data.pop();
 </script>
 

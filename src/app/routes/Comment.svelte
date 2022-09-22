@@ -40,9 +40,9 @@
       <CardHeader title="Comments" />
       <CardContent>
         {#if $comments.status === 'loading'}
-          <span>Loading...</span>
+          <Typography align="center">Loading</Typography>
         {:else if $comments.status === 'error'}
-          <span class="text-red-500">Error!</span>
+          <Typography align="center">Error!</Typography>
         {:else}
           <ListHeader title={`${$comments.data.pages[0].totalCount.toString()} comments total`} />
           {#each $comments.data.pages as page, i}

@@ -11,7 +11,6 @@
   import { push } from 'svelte-spa-router';
   import Time from 'svelte-time';
 
-  import Button from '../../ui/components/buttons/Button.svelte';
   import View from '../../ui/components/view/View.svelte';
   import ViewContent from '../../ui/components/view/ViewContent.svelte';
   import Card from '../../ui/components/card/Card.svelte';
@@ -27,9 +26,8 @@
   import { IconSize, Priority, RenderState } from '../../ui/enums';
 
   import { load, play, stop } from '../components/Audio.svelte';
-  import { IconDiscover, IconInbox, IconPlayer, IconMenu, IconComment, IconChevronRight } from '../assets/icons';
+  import { IconMenu, IconComment, IconChevronRight } from '../assets/icons';
 
-  import { menu } from '../stores/user';
   import { player } from '../stores/player';
   import { useEpisode } from '../services';
   import { formatSeconds } from '../helper';
@@ -73,12 +71,6 @@
   }
 
   registerView({});
-
-  $menu = [
-    { id: 'discover', text: 'Discover', route: '#/', icon: IconDiscover },
-    { id: 'inbox', text: 'Inbox', route: '/inbox', icon: IconInbox },
-    { id: 'player', text: 'Player', route: '/player', icon: IconPlayer },
-  ];
 
   onDestroy(() => keyMan.unsubscribe());
 </script>

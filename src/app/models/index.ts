@@ -7,5 +7,6 @@ export * from './Inbox';
 export * from './Menu';
 export * from './Media';
 export * from './Podcast';
+export * from './Search';
 export * from './Subscription';
 export * from './User';

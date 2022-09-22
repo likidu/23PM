@@ -9,6 +9,8 @@
   import Comment from './app/routes/Comment.svelte';
   import Podcast from './app/routes/Podcast.svelte';
   import Player from './app/routes/Player.svelte';
+  import Search from './app/routes/Search.svelte';
+  import SearchResult from './app/routes/SearchResult.svelte';
   import User from './app/routes/User.svelte';
   import Welcome from './app/routes/Welcome.svelte';
   import NotFound from './app/routes/NotFound.svelte';
@@ -31,6 +33,8 @@
     '/episode/:eid': Episode,
     '/comment/:eid': Comment,
     '/podcast/:pid': Podcast,
+    '/search/': Search,
+    '/search/:keyword': SearchResult,
     '/player': Player,
     '/user': User,
     '*': NotFound,

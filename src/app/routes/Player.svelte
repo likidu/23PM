@@ -1,6 +1,7 @@
 <script lang="ts">
   import KaiOS from 'kaios-lib';
   import { onDestroy } from 'svelte';
+  import { push } from 'svelte-spa-router';
 
   import View from '../../ui/components/view/View.svelte';
   import ViewContent from '../../ui/components/view/ViewContent.svelte';
@@ -13,13 +14,11 @@
   import Typography from '../../ui/components/Typography.svelte';
 
   import { KeyManager } from '../../ui/services';
-  import { appMenu } from '../../ui/stores';
-  import { IconSize, Priority, RenderState } from '../../ui/enums';
+  import { IconSize, Priority } from '../../ui/enums';
 
   import { reload, pause, play, skip, skipTo, src } from '../components/Audio.svelte';
-  import { IconDiscover, IconPlay, IconPause, IconBackward, IconForward } from '../assets/icons';
+  import { IconPlay, IconPause, IconBackward, IconForward, IconInfo, IconComment } from '../assets/icons';
 
-  import { menu } from '../stores/user';
   import { player } from '../stores/player';
   import { useEpisode } from '../services';
   import { formatSeconds } from '../helper';
@@ -35,6 +34,14 @@
     {
       onEnter: () => {
         $player.playing ? pause() : play();
+        return true;
+      },
+      onSoftLeft: () => {
+        push(`/episode/${eid}`);
+        return true;
+      },
+      onSoftRight: () => {
+        push(`/comment/${eid}`);
         return true;
       },
       onArrowLeft: () => {
@@ -67,8 +74,6 @@
     Priority.High,
   );
 
-  $menu = [{ id: 'discover', text: 'Discover', route: '#/', icon: IconDiscover }];
-
   // Ensure episode data is loaded
   $: eid = $episode.data?.eid;
 
@@ -81,7 +86,7 @@
   $: progress = Math.round(($player.progress / $player.duration) * 100000) / 1000;
 
   $: {
-    if ($player.eid && $appMenu.state === RenderState.Destroyed) keyMan.enable();
+    if ($player.eid) keyMan.enable();
     else keyMan.disable();
   }
 
@@ -122,15 +127,19 @@
               <span class="text-sm">{formatSeconds($player.duration - $player.progress)}</span>
             </div>
             <Progressbar value={progress} />
-            <div class="player-controller">
-              <Icon size={IconSize.Small}><IconBackward /></Icon>
-              {#if $player.playing}
-                <Icon size={IconSize.Large}><IconPause /></Icon>
-              {:else}
-                <Icon size={IconSize.Large}><IconPlay /></Icon>
-              {/if}
-              <Icon size={IconSize.Small}><IconForward /></Icon>
-            </div>
+            <footer class="softkey">
+              <div><Icon size={IconSize.Small}><IconInfo /></Icon></div>
+              <div class="player-controller">
+                <Icon size={IconSize.Small}><IconBackward /></Icon>
+                {#if $player.playing}
+                  <Icon size={IconSize.Large}><IconPause /></Icon>
+                {:else}
+                  <Icon size={IconSize.Large}><IconPlay /></Icon>
+                {/if}
+                <Icon size={IconSize.Small}><IconForward /></Icon>
+              </div>
+              <div><Icon size={IconSize.Small}><IconComment /></Icon></div>
+            </footer>
           </CardFooter>
         {/if}
       </Card>

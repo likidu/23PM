@@ -13,6 +13,7 @@ export { default as IconPlay } from './IconPlay.svelte';
 export { default as IconPause } from './IconPause.svelte';
 export { default as IconPlayer } from './IconPlayer.svelte';
 export { default as IconPodcast } from './IconPodcast.svelte';
+export { default as IconSearch } from './IconSearch.svelte';
 export { default as IconSettings } from './IconSettings.svelte';
 export { default as IconSubscribeAdd } from './IconSubscribeAdd.svelte';
 export { default as IconSubscribeRemove } from './IconSubscribeRemove.svelte';

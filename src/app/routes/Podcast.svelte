@@ -126,7 +126,7 @@
               <ListItem
                 icon={IconPodcast}
                 primaryText={episode.title}
-                navi={{ itemId: `ABC_${i + 1}`, onSelect: () => push(`/episode/${episode.eid}`) }}
+                navi={{ itemId: `EPISODE_${i + 1}`, onSelect: () => push(`/episode/${episode.eid}`) }}
               >
                 <div slot="bottom">
                   <p class="line-clamp-2 text-sm">{episode.description}</p>

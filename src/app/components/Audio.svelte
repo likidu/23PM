@@ -16,7 +16,7 @@
     player.update({ progress: audio.currentTime });
   };
 
-  audio.onended = () => stop();
+  audio.onended = () => pause();
 
   export function load(eid: string, mediaKey: string, duration: number) {
     audio.src = mediaKey;
