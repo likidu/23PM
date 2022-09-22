@@ -22,6 +22,7 @@
     "broadcast-channel": "^4.14.0",
     "cross-env": "^7.0.3",
     "cssnano": "^5.1.13",
+    "highlight-words": "^1.2.0",
     "jest": "^28.1.3",
     "kaios-lib": "^1.6.0",
     "patch-package": "^6.4.7",

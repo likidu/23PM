@@ -9,7 +9,7 @@
   import { registerView } from '../../ui/stores';
 
   import { useInboxList } from '../services';
-  import EpisodeList from '../components/EpisodeList.svelte';
+  import EpisodeItem from '../components/EpisodeItem.svelte';
 
   const inbox = useInboxList();
 
@@ -27,7 +27,9 @@
           <Typography align="center">Error!</Typography>
         {:else}
           <div>
-            <EpisodeList list={$inbox.data.data} icon="podcast" />
+            {#each $inbox.data.data as episode, i}
+              <EpisodeItem {episode} idx={i} icon="podcast" />
+            {/each}
           </div>
         {/if}
       </CardContent>
