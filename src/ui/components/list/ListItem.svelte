@@ -40,7 +40,12 @@
       />
     {/if}
     <div class="container">
-      <div class="primary">{primaryText}</div>
+      <!-- Enhance: can use primaryText or slot -->
+      {#if primaryText}
+        <div class="primary">{primaryText}</div>
+      {:else}
+        <slot name="primaryText" />
+      {/if}
       {#if secondaryText}
         <div class="secondary">{secondaryText}</div>
       {/if}
@@ -101,9 +106,7 @@
   .primary,
   .secondary,
   .accent {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    @apply line-clamp-1;
   }
   .primary {
     /* font-weight: 600; */

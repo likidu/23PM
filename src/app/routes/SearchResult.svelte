@@ -15,7 +15,7 @@
   import { Priority, RenderState } from '../../ui/enums';
 
   import { useSearchResultList } from '../services';
-  import EpisodeList from '../components/EpisodeList.svelte';
+  import EpisodeItem from '../components/EpisodeItem.svelte';
 
   export let params: { keyword: string };
 
@@ -49,7 +49,9 @@
         {:else if $result.status === 'error'}
           <Typography align="center">Error!</Typography>
         {:else}
-          <EpisodeList list={$result.data.data} />
+          {#each $result.data.data as episode, i}
+            <EpisodeItem {episode} idx={i} highlight={params.keyword} />
+          {/each}
         {/if}
       </CardContent>
     </Card>
