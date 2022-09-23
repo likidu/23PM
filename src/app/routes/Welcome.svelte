@@ -34,8 +34,8 @@
   let mobile = '2067711184';
   let code = '';
   let toast = '';
-  let resend: SvelteComponent;
   let counter: number;
+  let resend: Button;
 
   // Wait for x second before resend verification code
   const second = 1000;
@@ -71,7 +71,7 @@
       {
         id: 'login',
         title: 'Login',
-        onSelect: () => {},
+        onSelect: () => { console.log('login') },
       },
     ],
     activeCardId: params.cardId ?? 'splash',
