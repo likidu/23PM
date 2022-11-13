@@ -27,13 +27,15 @@ const userStats = async (uid: string): Promise<UserStats> => {
 export const useUserStats = (uid: string) => useQuery('user-stats', () => userStats(uid));
 
 // Discovery list
-const discoveryList = async (type?: string): Promise<DiscoveryList> => {
-  const request = type ? { returnAll: false, type } : { returnAll: false };
+const discoveryList = async (): Promise<DiscoveryList> => {
+  const request = { returnAll: false };
+
   const { data } = await httpClient.post('/discovery-feed/list', request);
   return data;
 };
 
-export const useDiscoveryList = (type?: string) => useQuery(['discovery', type], () => discoveryList(type));
+// {querykey, pageParam} are what pass to the queryFn
+export const useDiscoveryList = () => useQuery(['discovery'], () => discoveryList());
 
 // Inbox List
 const inboxList = async (limit = 10): Promise<InboxList> => {

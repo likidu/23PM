@@ -9,18 +9,10 @@
   export let list: TopList;
 
   const { data } = list;
-  // Only use first two lists: Hot and Skyrocket
-  data.pop();
 </script>
 
 {#each data as topList}
-  {#if topList.category === 'HOT_EPISODES_IN_24_HOURS'}
-    <ListHeader title="24 Hours Hot" />
-  {:else if topList.category === 'SKYROCKET_EPISODES'}
-    <ListHeader title="Skyrocket" />
-  {:else}
-    <ListHeader title="New Stars" />
-  {/if}
+  <ListHeader title={topList.title} />
   {#each topList.items as list, i}
     <ListItem
       imageUrl={list.item.podcast.image.thumbnailUrl}

@@ -76,9 +76,7 @@
             disabled={!$comments.hasNextPage || $comments.isFetchingNextPage}
             navi={{
               itemId: 'LOAD_MORE',
-              onSelect: () => {
-                $comments.fetchNextPage();
-              },
+              onSelect: () => $comments.fetchNextPage(),
             }}
           />
         {/if}

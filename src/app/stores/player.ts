@@ -6,6 +6,7 @@ import type { Media } from '../models';
 const DEFAULT_MEDIA: Media = {
   eid: undefined,
   duration: 0,
+  buffered: 0,
   progress: 0,
   playing: false,
 };

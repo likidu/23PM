@@ -69,4 +69,19 @@ export class Client {
       return false;
     }
   }
+
+  /**
+   * @summary Remove episode from inbox
+   * @param eid Episode ID
+   */
+  static async removeInbox(eid: string): Promise<boolean> {
+    try {
+      await httpClient.post('/inbox/remove', {
+        eids: [eid],
+      });
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
 }

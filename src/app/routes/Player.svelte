@@ -25,6 +25,7 @@
 
   let eid: string;
   let progress = 0;
+  let buffered = 0;
 
   const imageSize = 144;
 
@@ -33,7 +34,13 @@
   const keyMan = KeyManager.subscribe(
     {
       onEnter: () => {
-        $player.playing ? pause() : play();
+        // $player.playing ? pause() : play();
+        if (!$player.playing) {
+          // Only play when buffered
+          if ($player.buffered > $player.progress) play();
+        } else {
+          pause();
+        }
         return true;
       },
       onSoftLeft: () => {
@@ -82,8 +89,9 @@
     reload($episode.data.mediaKey, $player.progress);
   }
 
-  // Set progress bar percent and reserve 43 fraction values (100,000 / 100).
+  // Set progress bar percent and reserve 3 fraction values (100,000 / 1,000).
   $: progress = Math.round(($player.progress / $player.duration) * 100000) / 1000;
+  $: buffered = Math.round(($player.buffered / $player.duration) * 100000) / 1000;
 
   $: {
     if ($player.eid) keyMan.enable();
@@ -126,7 +134,7 @@
               <span class="text-sm">{formatSeconds($player.progress)}</span>
               <span class="text-sm">{formatSeconds($player.duration - $player.progress)}</span>
             </div>
-            <Progressbar value={progress} />
+            <Progressbar value={progress} shade={buffered} />
             <footer class="softkey">
               <div><Icon size={IconSize.Small}><IconInfo /></Icon></div>
               <div class="player-controller">

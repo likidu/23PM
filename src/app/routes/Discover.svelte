@@ -40,10 +40,10 @@
             {/if}
           {/each}
           <Button
-            title="End of list"
+            title="Keep discovering"
             disabled={true}
             navi={{
-              itemId: 'endoflist',
+              itemId: 'DISCOVERY_LOAD_MORE',
             }}
           />
         {/if}
