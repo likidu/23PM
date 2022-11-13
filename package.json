@@ -7,6 +7,7 @@
     "test": "jest",
     "test:watch": "jest --watchAll",
     "serve": "vite preview",
+    "postinstall": "patch-package",
     "check": "svelte-check --tsconfig ./tsconfig.json --threshold error"
   },
   "type": "module",
