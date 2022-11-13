@@ -29,7 +29,7 @@
   import { IconMenu, IconComment, IconChevronRight } from '../assets/icons';
 
   import { player } from '../stores/player';
-  import { useEpisode } from '../services';
+  import { Client, useEpisode } from '../services';
   import { formatSeconds } from '../helper';
 
   export let params: { eid: string };
@@ -49,6 +49,8 @@
           load(eid, mediaKey, duration);
           // Immediate play the episode once loaded.
           play();
+          // TODO: Update playlist, remove from inbox and create episode-played
+          Client.removeInbox(eid);
         }
         push('/player');
         return true;

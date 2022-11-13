@@ -11,7 +11,6 @@ export const INIT_REFRESH_TOKEN =
 export const API_ENDPOINT = 'https://api.xiaoyuzhoufm.com';
 const API_VERSION = 'v1';
 
-// const deviceId = "65F3A577-41CB-4A99-BF83-93A41055088B";
 const deviceId = '0B13CFA4-9721-4F52-ABE5-CB351BD747FA';
 
 const deviceProperties = {
@@ -22,8 +21,8 @@ const deviceProperties = {
 export const API_CONFIG: AxiosRequestConfig = {
   baseURL: `${API_ENDPOINT}/${API_VERSION}`,
   headers: {
-    'App-BuildNo': 1056,
-    'App-Version': '2.34.1',
+    'App-BuildNo': 1174,
+    'App-Version': '2.39',
     'Access-Control-Allow-Origin': '*',
     BundleID: 'app.podcast.cosmos',
     'Content-Type': 'application/json;charset=utf-8',

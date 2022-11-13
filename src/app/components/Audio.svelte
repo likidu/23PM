@@ -12,6 +12,20 @@
 
   audio.onloadeddata = () => {};
 
+  // Get buffered progress
+  // https://developer.mozilla.org/en-US/docs/Web/Guide/Audio_and_video_delivery/buffering_seeking_time_ranges#creating_our_own_buffering_feedback
+  audio.onprogress = () => {
+    const duration = audio.duration;
+    if (duration > 0) {
+      for (let i = 0; i < audio.buffered.length; i++) {
+        if (audio.buffered.start(audio.buffered.length - 1 - i) < audio.currentTime) {
+          player.update({ buffered: audio.buffered.end(audio.buffered.length - 1 - i) });
+          break;
+        }
+      }
+    }
+  };
+
   audio.ontimeupdate = () => {
     player.update({ progress: audio.currentTime });
   };
