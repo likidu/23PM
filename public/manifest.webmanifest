@@ -1,8 +1,8 @@
 {
   "lang": "en-US",
   "name": "CosmosFM",
-  "id": "cosmosfm",
-  "short_name": "CosmosFM",
+  "id": "com.likidu.cosmos_fm",
+  "short_name": "cosmos_fm",
   "categories": ["social"],
   "description": "A Cosmos FM client for KaiOS",
   "theme_color": "#4da8d7",
@@ -22,7 +22,7 @@
   "start_url": "/index.html",
   "orientation": "portrait-primary",
   "b2g_features": {
-    "version": "0.2.4",
+    "version": "0.2.5",
     "subtitle": "A Cosmos FM client for KaiOS",
     "type": "signed",
     "csp": "default-src *; script-src 'self'; object-src 'none'; style-src 'self' 'unsafe-inline'",

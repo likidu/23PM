@@ -71,7 +71,9 @@
       {
         id: 'login',
         title: 'Login',
-        onSelect: () => { console.log('login') },
+        onSelect: () => {
+          console.log('login');
+        },
       },
     ],
     activeCardId: params.cardId ?? 'splash',

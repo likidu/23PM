@@ -8,6 +8,8 @@ import { player } from '../stores/player';
 
 import type { LoginWithSMS, AuthError, PhoneNumber, User, RefreshToken, SubscriptionMode } from '../models';
 
+new Promise(() => {});
+
 export class Client {
   static async sendCode(mobile: PhoneNumber): Promise<{} | AuthError> {
     try {

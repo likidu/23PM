@@ -1,14 +1,14 @@
 {
-  "id": "com.likidu.cosmosfm",
+  "id": "com.likidu.cosmos_fm",
   "name": "CosmosFM",
   "description": "A Cosmos FM client for KaiOS",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "launch_path": "/index.html",
   "icons": {
     "112": "/icons/icon_112.png",
     "56": "/icons/icon_56.png"
   },
-  "categories": ["news"],
+  "categories": ["social"],
   "theme_color": "#4da8d7",
   "focus_color": "#4da8d7",
   "developer": {
