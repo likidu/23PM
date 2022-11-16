@@ -1,5 +1,5 @@
 {
-  "id": "com.likidu.cosmosfm",
+  "id": cosmosfm",
   "name": "CosmosFM",
   "description": "A Cosmos FM client for KaiOS",
   "version": "0.2.5",

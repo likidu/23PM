@@ -1,7 +1,7 @@
 {
   "lang": "en-US",
   "name": "CosmosFM",
-  "id": "com.likidu.cosmosfm",
+  "id": "cosmosfm",
   "short_name": "cosmosfm",
   "categories": ["social"],
   "description": "A Cosmos FM client for KaiOS",
