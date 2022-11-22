@@ -1,6 +1,6 @@
 {
-  "id": cosmosfm",
-  "name": "CosmosFM",
+  "id": "cosmosfm",
+  "name": "Cosmos.FM",
   "description": "A Cosmos FM client for KaiOS",
   "version": "0.2.5",
   "launch_path": "/index.html",
@@ -16,6 +16,7 @@
     "url": "https://likidu.com"
   },
   "type": "privileged",
+  "csp": "default-src *; script-src 'self'; object-src 'none'; style-src 'self' 'unsafe-inline'",
   "permissions": {
     "audio-channel-content": {
       "description": "Required to play audio in the background."
