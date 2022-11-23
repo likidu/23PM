@@ -1,7 +1,7 @@
-import axios, { AxiosResponse } from 'axios';
-import type { AxiosRequestConfig, AxiosPromise, AxiosError } from 'axios';
+import axios from 'axios';
+import type { AxiosResponse, AxiosRequestConfig, AxiosPromise, AxiosError } from 'axios';
 import { get } from 'svelte/store';
-import type { RefreshTokenResponse, RefreshTokenStorage } from '../models';
+import type { RefreshTokenResponse } from '../models';
 import { API_ENDPOINT, API_CONFIG } from './config';
 
 import { tokens } from '../stores/user';
