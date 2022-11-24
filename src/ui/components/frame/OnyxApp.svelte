@@ -47,7 +47,7 @@
       //   }
       // },
     },
-    Priority.Low
+    Priority.Low,
   );
 
   // Apply settings
@@ -71,24 +71,15 @@
       [TextSize.Large]: 11,
       [TextSize.Largest]: 12,
     };
-    document.documentElement.style.setProperty(
-      '--base-font-size',
-      `${textSize[$settings.textSize]}px`
-    );
+    document.documentElement.style.setProperty('--base-font-size', `${textSize[$settings.textSize]}px`);
 
     const weight = {
       [TextWeight.Light]: { regular: 300, bold: 400 },
       [TextWeight.Medium]: { regular: 400, bold: 600 },
       [TextWeight.Heavy]: { regular: 600, bold: 700 },
     };
-    document.documentElement.style.setProperty(
-      '--regular-font-weight',
-      `${weight[$settings.textWeight].regular}`
-    );
-    document.documentElement.style.setProperty(
-      '--bold-font-weight',
-      `${weight[$settings.textWeight].bold}`
-    );
+    document.documentElement.style.setProperty('--regular-font-weight', `${weight[$settings.textWeight].regular}`);
+    document.documentElement.style.setProperty('--bold-font-weight', `${weight[$settings.textWeight].bold}`);
 
     // Display Density
     document.body.dataset.density = $settings.displayDensity;
@@ -97,10 +88,7 @@
     document.documentElement.style.setProperty('--radius', `${$settings.borderRadius}px`);
 
     // Animations
-    document.documentElement.style.setProperty(
-      '--animation-speed',
-      `${$settings.animationSpeed}ms`
-    );
+    document.documentElement.style.setProperty('--animation-speed', `${$settings.animationSpeed}ms`);
   }
 </script>
 

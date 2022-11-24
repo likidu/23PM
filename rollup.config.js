@@ -27,6 +27,10 @@ export default {
       preventAssignment: true,
       'process.env.NODE_ENV': JSON.stringify(production ? 'production' : 'development'),
     }),
+    typescript({
+      sourceMap: !production,
+      inlineSources: !production,
+    }),
     svelte({
       preprocess: sveltePreprocess({
         sourceMap: !production,
@@ -88,10 +92,6 @@ export default {
           },
         ],
       ],
-    }),
-    typescript({
-      sourceMap: !production,
-      inlineSources: !production,
     }),
 
     // If we're building for production (npm run build
